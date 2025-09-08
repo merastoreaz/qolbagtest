@@ -5,151 +5,134 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Qolbaq və Charm</title>
 <style>
-  body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    background: #2b2b2b; /* tünd boz / asfalt rəng */
-    font-family: sans-serif;
-    padding: 20px;
-    color: #fff;
-  }
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: #2b2b2b;
+  font-family: sans-serif;
+  padding: 20px;
+  color: #fff;
+}
 
-  h2 {
-    margin-top: 10px;
-    color: #fff;
-  }
+h1,h2 { color: #fff; }
 
-  /* Qolbaq slotları yan-yana, minimal boşluq */
-  .wristband-row {
-    display: flex;
-    margin: 30px 0;
-    gap: 2px; /* minimal boşluq */
-    background: #3a3a3a; /* qolbaqların arxa fonu bir az açıq */
-    padding: 10px;
-    border-radius: 12px;
+.wristband-row {
+  display: flex;
+  gap: 2px;
+  padding: 10px;
+  background: #3a3a3a;
+  border-radius: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  flex-wrap: nowrap;
+}
 
-    overflow-x: auto; /* horizontal scroll aktivləşdirildi */
-    -webkit-overflow-scrolling: touch; /* iOS üçün smooth scroll */
-    scroll-behavior: smooth; /* daha yumşaq skroll (istəyə bağlı) */
-    white-space: nowrap; /* slotlar bir sətrdə qalır */
-  }
+.wristband-slot {
+  flex: 0 0 auto;
+  width: 60px;
+  height: 60px;
+  background: url('https://i.ibb.co/Kc96Wj87/qolbaq.png') no-repeat center/contain;
+  cursor: pointer;
+  position: relative;
+}
 
-  .wristband-slot {
-    width: 60px;  
-    height: 60px;
-    position: relative;
-    background: url('https://i.ibb.co/Kc96Wj87/qolbaq.png') no-repeat center/contain;
-    background-size: contain;
-    cursor: pointer;
-    flex: 0 0 auto; /* slotlar sıxılmasın, ölçüsü sabit qalsın */
-  }
+@media (max-width:480px){
+  .wristband-slot { width: 40px; height: 40px; }
+}
 
-  /* Mobil üçün */
-    @media (max-width: 480px) {
-    .wristband-slot {
-        width: 40px;
-        height: 40px;
-    }
-  }
+.charm-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+}
 
-  /* Charm kataloqu */
-  .charm-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 20px;
-    gap: 10px;
-  }
+.charm-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60px;
+  background: #4a4a4a;
+  padding: 8px;
+  border-radius: 10px;
+}
 
-  .charm-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 60px;
-    background: #4a4a4a; /* charm arxa fonu */
-    padding: 8px;
-    border-radius: 10px;
-  }
+.charm {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fff;
+  padding: 5px;
+}
 
-  .charm {
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    object-fit: contain; /* şəkil proporsiyalı */
-    border-radius: 8px;
-    background: #fff;
-    padding: 5px;
-  }
+.charm.selected { border-color: red; }
 
-  .charm.selected {
-    border-color: red;
-  }
+.charm-label {
+  font-size: 12px;
+  margin-top: 3px;
+  color: #eee;
+  text-align: center;
+}
 
-  .charm-label {
-    font-size: 12px;
-    margin-top: 3px;
-    color: #eee;
-    text-align: center;
-  }
-
-  .placed-charm {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 60px;  
-    height: 60px; 
-    pointer-events: auto; 
-    object-fit: contain; /* qolbaqda düzgün görünüş */
-  }
+.placed-charm {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: auto;
+}
 </style>
 </head>
 <body>
 
-<h1>MeraStore<h1>
+<h1>MeraStore</h1>
 <h2>Charm seç və qolbaqda yerləşdir / silmək üçün kliklə</h2>
 
-<div class="wristband-row" id="wristbandRow">
-  <!-- 14 qolbaq slotu JS ilə əlavə olunacaq -->
-</div>
-
-<div class="charm-container" id="charmContainer">
-  <!-- Charm-lar JS ilə əlavə olunacaq -->
-</div>
+<div class="wristband-row" id="wristbandRow"></div>
+<div class="charm-container" id="charmContainer"></div>
 
 <script>
-// Charm linkləri və adları
 const charmData = [
   { src: 'https://i.ibb.co/JWZJ4Zyw/kedi-removebg-preview.png', label: 'Pishik Couple' },
   { src: 'https://i.ibb.co/M5Md9gsy/glamur-removebg-preview.png', label: 'Glaomur' },
   { src: 'https://i.ibb.co/cSTdxSCy/charm.png', label: 'SpiderMan' },
-  { src: 'https://i.ibb.co/kg44J4Hn/8-ball-bantik-removebg-preview.png', label: '8 Ball Bantik' }  
+  { src: 'https://i.ibb.co/kg44J4Hn/8-ball-bantik-removebg-preview.png', label: '8 Ball Bantik' }
 ];
 
 const wristbandRow = document.getElementById('wristbandRow');
 const charmContainer = document.getElementById('charmContainer');
 let selectedCharm = null;
 
+// Scroll üçün dəyişənlər
+let isDown = false;
+let startX;
+let scrollLeft;
+
 // 14 qolbaq slotu
-for(let i=0; i<14; i++) {
+for(let i=0;i<14;i++){
   const slot = document.createElement('div');
   slot.className = 'wristband-slot';
-  
-  slot.addEventListener('click', () => {
+
+  slot.addEventListener('click', ()=>{
     if(!selectedCharm) return;
     if(slot.querySelector('.placed-charm')) return;
-    
+
     const placed = document.createElement('img');
     placed.src = selectedCharm.src;
     placed.className = 'placed-charm';
-    
-    placed.addEventListener('click', (e) => {
+    placed.addEventListener('click', e=>{
       e.stopPropagation();
       placed.remove();
     });
-
     slot.appendChild(placed);
   });
 
@@ -157,52 +140,49 @@ for(let i=0; i<14; i++) {
 }
 
 // Charm kataloqu
-charmData.forEach(charm => {
+charmData.forEach(charm=>{
   const wrapper = document.createElement('div');
-  wrapper.className = 'charm-wrapper';
-
+  wrapper.className='charm-wrapper';
   const img = document.createElement('img');
   img.src = charm.src;
-  img.className = 'charm';
-  
-  img.addEventListener('click', () => {
-    document.querySelectorAll('.charm').forEach(c => c.classList.remove('selected'));
+  img.className='charm';
+  img.addEventListener('click', ()=>{
+    document.querySelectorAll('.charm').forEach(c=>c.classList.remove('selected'));
     img.classList.add('selected');
     selectedCharm = charm;
   });
-
   const label = document.createElement('div');
-  label.className = 'charm-label';
-  label.textContent = charm.label;
-
+  label.className='charm-label';
+  label.textContent=charm.label;
   wrapper.appendChild(img);
   wrapper.appendChild(label);
   charmContainer.appendChild(wrapper);
-  });
-    wristbandRow.addEventListener('mousedown', e => {
-      isDown = true;
-      startX = e.pageX - wristbandRow.offsetLeft;
-      scrollLeft = wristbandRow.scrollLeft;
-    });
-    wristbandRow.addEventListener('mouseleave', () => isDown = false);
-    wristbandRow.addEventListener('mouseup', () => isDown = false);
-    wristbandRow.addEventListener('mousemove', e => {
-      if(!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - startX;
-      wristbandRow.scrollLeft = scrollLeft - (x * 2);
-    });
+});
 
-    // Mobil üçün touch events
-    wristbandRow.addEventListener('touchstart', e => {
-      startX = e.touches[0].pageX - wristbandRow.offsetLeft;
-      scrollLeft = wristbandRow.scrollLeft;
-    });
-    wristbandRow.addEventListener('touchmove', e => {
-      const x = e.touches[0].pageX - wristbandRow.offsetLeft;
-      const walk = (x - startX) * 1;
-      wristbandRow.scrollLeft = scrollLeft - walk;
-    });
-  </script>
+// Scroll JS
+wristbandRow.addEventListener('mousedown', e=>{
+  isDown=true;
+  startX=e.pageX-wristbandRow.offsetLeft;
+  scrollLeft=wristbandRow.scrollLeft;
+});
+wristbandRow.addEventListener('mouseleave', ()=>isDown=false);
+wristbandRow.addEventListener('mouseup', ()=>isDown=false);
+wristbandRow.addEventListener('mousemove', e=>{
+  if(!isDown) return;
+  e.preventDefault();
+  const x=e.pageX-startX;
+  wristbandRow.scrollLeft=scrollLeft-x;
+});
+
+wristbandRow.addEventListener('touchstart', e=>{
+  startX=e.touches[0].pageX-wristbandRow.offsetLeft;
+  scrollLeft=wristbandRow.scrollLeft;
+});
+wristbandRow.addEventListener('touchmove', e=>{
+  const x=e.touches[0].pageX-wristbandRow.offsetLeft;
+  wristbandRow.scrollLeft=scrollLeft-(x-startX);
+});
+</script>
+
 </body>
 </html>
