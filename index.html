@@ -14,6 +14,7 @@ body {
   font-family: sans-serif;
   padding: 20px;
   color: #fff;
+  margin:0;
 }
 
 h1,h2 { color: #fff; }
@@ -70,8 +71,10 @@ h1,h2 { color: #fff; }
   border-radius: 8px;
   background: #fff;
   padding: 5px;
+  transition: transform 0.2s, border-color 0.2s;
 }
 
+.charm:hover { transform: scale(1.1); }
 .charm.selected { border-color: red; }
 
 .charm-label {
@@ -90,15 +93,53 @@ h1,h2 { color: #fff; }
   object-fit: contain;
   pointer-events: auto;
 }
+
+/* Footer */
+footer {
+  width:100%;
+  background:#1f1f1f;
+  color:#fff;
+  padding:20px 0;
+  margin-top:30px;
+  text-align:center;
+  font-size:14px;
+  border-top:1px solid #444;
+}
+
+footer a {
+  color:#fff;
+  margin:0 10px;
+  text-decoration:none;
+  font-size:24px;
+  transition: transform 0.2s, color 0.2s;
+}
+
+footer a:hover {
+  color:#f39c12; /* hover rəngi (narıncı) */
+  transform: scale(1.3); /* icon böyüyür */
+}
 </style>
 </head>
 <body>
 
 <h1>MeraStore</h1>
 <h2>Charm seç və qolbaqda yerləşdir / silmək üçün kliklə</h2>
+<h3>Mery Seni Sevirem</h3>
 
 <div class="wristband-row" id="wristbandRow"></div>
 <div class="charm-container" id="charmContainer"></div>
+
+<!-- Footer -->
+<footer>
+  <div>MeraStore © 2035</div>
+  <div style="margin-top:8px;">
+    <a href="https://www.instagram.com/merastore.az" target="_blank"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.tiktok.com/@merastore.az" target="_blank"><i class="fab fa-tiktok"></i></a>
+  </div>
+</footer>
+
+<!-- Font Awesome CDN -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 <script>
 const charmData = [
