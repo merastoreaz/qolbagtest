@@ -179,36 +179,36 @@ charmData.forEach(charm => {
   wrapper.appendChild(label);
   charmContainer.appendChild(wrapper);
 });
-</script>
+<script>
 const wristbandRow = document.querySelector('.wristband-row');
-  let isDown = false;
-  let startX;
-  let scrollLeft;
+let isDown = false;
+let startX;
+let scrollLeft;
 
-  wristbandRow.addEventListener('mousedown', e => {
-    isDown = true;
-    startX = e.pageX - wristbandRow.offsetLeft;
-    scrollLeft = wristbandRow.scrollLeft;
-  });
-  wristbandRow.addEventListener('mouseleave', () => isDown = false);
-  wristbandRow.addEventListener('mouseup', () => isDown = false);
-  wristbandRow.addEventListener('mousemove', e => {
-    if(!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - startX;
-    wristbandRow.scrollLeft = scrollLeft - (x * 2);
-  });
+wristbandRow.addEventListener('mousedown', e => {
+  isDown = true;
+  startX = e.pageX - wristbandRow.offsetLeft;
+  scrollLeft = wristbandRow.scrollLeft;
+});
+wristbandRow.addEventListener('mouseleave', () => isDown = false);
+wristbandRow.addEventListener('mouseup', () => isDown = false);
+wristbandRow.addEventListener('mousemove', e => {
+  if(!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - startX;
+  wristbandRow.scrollLeft = scrollLeft - (x * 2);
+});
 
-  // Mobil üçün touch events
-  wristbandRow.addEventListener('touchstart', e => {
-    startX = e.touches[0].pageX - wristbandRow.offsetLeft;
-    scrollLeft = wristbandRow.scrollLeft;
-  });
-  wristbandRow.addEventListener('touchmove', e => {
-    const x = e.touches[0].pageX - wristbandRow.offsetLeft;
-    const walk = (x - startX) * 1;
-    wristbandRow.scrollLeft = scrollLeft - walk;
-  });
+// Mobil üçün touch events
+wristbandRow.addEventListener('touchstart', e => {
+  startX = e.touches[0].pageX - wristbandRow.offsetLeft;
+  scrollLeft = wristbandRow.scrollLeft;
+});
+wristbandRow.addEventListener('touchmove', e => {
+  const x = e.touches[0].pageX - wristbandRow.offsetLeft;
+  const walk = (x - startX) * 1;
+  wristbandRow.scrollLeft = scrollLeft - walk;
+});
  </script>
 </body>
 </html>
