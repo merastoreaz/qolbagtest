@@ -24,13 +24,10 @@ h1,h2 { color: #fff; }
   padding: 10px;
   background: #3a3a3a;
   border-radius: 12px;
-
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-
   flex-wrap: nowrap;
-  min-width: 100%;
 }
 
 .wristband-slot {
@@ -104,7 +101,6 @@ h1,h2 { color: #fff; }
 <div class="charm-container" id="charmContainer"></div>
 
 <script>
-// Charm linkləri və adları
 const charmData = [
   { src: 'https://i.ibb.co/JWZJ4Zyw/kedi-removebg-preview.png', label: 'Pishik Couple' },
   { src: 'https://i.ibb.co/M5Md9gsy/glamur-removebg-preview.png', label: 'Glaomur' },
@@ -163,7 +159,7 @@ charmData.forEach(charm=>{
   charmContainer.appendChild(wrapper);
 });
 
-// Mouse scroll
+// Scroll JS
 wristbandRow.addEventListener('mousedown', e=>{
   isDown=true;
   startX=e.pageX-wristbandRow.offsetLeft;
@@ -178,14 +174,13 @@ wristbandRow.addEventListener('mousemove', e=>{
   wristbandRow.scrollLeft=scrollLeft-x;
 });
 
-// Touch scroll
 wristbandRow.addEventListener('touchstart', e=>{
-  startX = e.touches[0].pageX;
-  scrollLeft = wristbandRow.scrollLeft;
+  startX=e.touches[0].pageX-wristbandRow.offsetLeft;
+  scrollLeft=wristbandRow.scrollLeft;
 });
 wristbandRow.addEventListener('touchmove', e=>{
-  const x = e.touches[0].pageX;
-  wristbandRow.scrollLeft = scrollLeft-(x-startX);
+  const x=e.touches[0].pageX-wristbandRow.offsetLeft;
+  wristbandRow.scrollLeft=scrollLeft-(x-startX);
 });
 </script>
 
