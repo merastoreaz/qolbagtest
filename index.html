@@ -29,6 +29,10 @@
     background: #3a3a3a; /* qolbaqların arxa fonu bir az açıq */
     padding: 10px;
     border-radius: 12px;
+
+    overflow-x: auto; /* horizontal scroll aktivləşdirildi */
+    -webkit-overflow-scrolling: touch; /* iOS üçün smooth scroll */
+    scroll-behavior: smooth; /* daha yumşaq skroll (istəyə bağlı) */
   }
 
   .wristband-slot {
@@ -38,6 +42,7 @@
     background: url('https://i.ibb.co/Kc96Wj87/qolbaq.png') no-repeat center/contain;
     background-size: contain;
     cursor: pointer;
+    flex: 0 0 auto; /* slotlar sıxılmasın, ölçüsü sabit qalsın */
   }
 
   /* Charm kataloqu */
