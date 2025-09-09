@@ -89,44 +89,46 @@ h1, h2 { color:#fff; text-align:center; }
   color: #fff;
 }
 
-.action-buttons {
-  display: flex;
-  flex-direction: column; /* alt-alta */
-  gap: 12px; /* düymələr arası məsafə */
-  align-items: center; /* mərkəzə düzlə */
-  margin: 15px 0;
-}
-
 .action-buttons button {
-  flex: unset; /* yan-yana ölçünü qaldırmır */
-  width: 200px; /* daha kompakt düymə */
-  padding: 10px 0;
+  flex: 0 0 auto;
+  padding: 12px 25px;
   font-size: 15px;
   font-weight: 600;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  border-radius: 12px;
+  color: #fff;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
   background-size: 200% 100%;
-  transition: all 0.3s ease, transform 0.2s;
+  transition: all 0.3s ease, transform 0.2s, box-shadow 0.2s;
+  border: none;
 }
 
-/* Daha tünd gradientlər */
+/* Bütün charmları sil */
 #clearAll {
-  background-image: linear-gradient(135deg, #c0392b, #922b21);
+  background-image: linear-gradient(135deg, #9b1e1e, #6d1313);
 }
 #clearAll:hover {
-  background-position: right center;
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.6);
 }
 
+/* Dizaynı paylaş */
 #shareBtn {
-  background-image: linear-gradient(135deg, #2980b9, #1f4f7a);
+  background-image: linear-gradient(135deg, #1f5278, #10335c);
 }
 #shareBtn:hover {
-  background-position: right center;
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.6);
 }
+
+/* Düymələr yan-yana qalır */
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
 
 
 footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:30px; text-align:center; font-size:14px; border-top:1px solid #444; }
