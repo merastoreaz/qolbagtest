@@ -18,18 +18,25 @@
     }
     h1,h2 { color: #fff; }
 
-    /* Qolbaq sahəsi */
+    /* Qolbaq container */
+    .wristband-wrapper {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px;
+      background: #3a3a3a;   /* ✅ fon artıq wrapper-də */
+      border-radius: 15px;
+      overflow: hidden; /* scrollbar yox */
+      cursor: grab;
+    }
+    .wristband-wrapper:active { cursor: grabbing; }
+
     .wristband-row {
       display: flex;
       gap: 2px;
       padding: 10px;
-      background: #3a3a3a;
-      border-radius: 12px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scroll-behavior: smooth;
       flex-wrap: nowrap;
-      transform: scale(0.95);
+      transform: scale(0.85);
+      transform-origin: center;
     }
     .wristband-slot {
       flex: 0 0 auto;
@@ -45,11 +52,11 @@
       box-shadow: 0 0 10px rgba(255,255,255,0.5);
     }
     @media (max-width:480px){
-      .wristband-slot {
-        width: 35px;
-        height: 35px;
+      .wristband-wrapper {
+        max-width: 95%;
       }
-      .wristband-row { transform: scale(0.9); }
+      .wristband-row { transform: scale(0.75); }
+      .wristband-slot { width: 40px; height: 40px; }
     }
 
     /* Charm kataloqu */
@@ -80,7 +87,6 @@
       background: #fff;
       padding: 5px;
       transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-      position: relative;
     }
     .charm:hover { transform: scale(1.1); }
     .charm.selected {
@@ -92,23 +98,6 @@
       margin-top: 3px;
       color: #eee;
       text-align: center;
-    }
-    .charm-tooltip {
-      position: absolute;
-      bottom: 100%;
-      background: #000;
-      color: #fff;
-      padding: 3px 6px;
-      font-size: 11px;
-      border-radius: 4px;
-      white-space: nowrap;
-      opacity: 0;
-      transform: translateY(5px);
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .charm.selected:hover + .charm-tooltip {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     /* Qolbaqda yerləşən charm */
@@ -155,7 +144,11 @@
   <h1>MeraStore</h1>
   <h2>Charm seç və qolbaqda yerləşdir (sil → 2 dəfə klik)</h2>
 
-  <div class="wristband-row" id="wristbandRow"></div>
+  <!-- Qolbaq hissəsi -->
+  <div class="wristband-wrapper" id="wristbandWrapper">
+    <div class="wristband-row" id="wristbandRow"></div>
+  </div>
+
   <div class="charm-container" id="charmContainer"></div>
 
   <!-- Footer -->
@@ -179,6 +172,7 @@
       { src: 'https://i.ibb.co/kg44J4Hn/8-ball-bantik-removebg-preview.png', label: '8 Ball Bantik' }
     ];
 
+    const wristbandWrapper = document.getElementById('wristbandWrapper');
     const wristbandRow = document.getElementById('wristbandRow');
     const charmContainer = document.getElementById('charmContainer');
     let selectedCharm = null;
@@ -225,14 +219,36 @@
       label.className='charm-label';
       label.textContent=charm.label;
 
-      const tooltip = document.createElement('div');
-      tooltip.className = 'charm-tooltip';
-      tooltip.textContent = charm.label;
-
       wrapper.appendChild(img);
-      wrapper.appendChild(tooltip);
       wrapper.appendChild(label);
       charmContainer.appendChild(wrapper);
+    });
+
+    // Drag-scroll qolbaq üçün
+    let isDown = false;
+    let startX, scrollLeft;
+    wristbandWrapper.addEventListener('mousedown', e=>{
+      isDown = true;
+      startX = e.pageX - wristbandWrapper.offsetLeft;
+      scrollLeft = wristbandWrapper.scrollLeft;
+    });
+    wristbandWrapper.addEventListener('mouseleave', ()=> isDown = false);
+    wristbandWrapper.addEventListener('mouseup', ()=> isDown = false);
+    wristbandWrapper.addEventListener('mousemove', e=>{
+      if(!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - wristbandWrapper.offsetLeft;
+      wristbandWrapper.scrollLeft = scrollLeft - (x - startX);
+    });
+
+    // Touch dəstəyi
+    wristbandWrapper.addEventListener('touchstart', e=>{
+      startX = e.touches[0].pageX - wristbandWrapper.offsetLeft;
+      scrollLeft = wristbandWrapper.scrollLeft;
+    });
+    wristbandWrapper.addEventListener('touchmove', e=>{
+      const x = e.touches[0].pageX - wristbandWrapper.offsetLeft;
+      wristbandWrapper.scrollLeft = scrollLeft - (x - startX);
     });
   </script>
 </body>
