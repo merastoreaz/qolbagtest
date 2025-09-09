@@ -1,1 +1,239 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeraStore / Qolbaq və Charm</title>
+<style>
+body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; background: #2b2b2b; font-family: sans-serif; padding: 20px; color: #fff; margin: 0; }
+h1, h2 { color:#fff; }
+.search-box { margin: 10px 0; width: 100%; max-width: 400px; }
+.search-box input { width: 100%; padding: 8px; border-radius: 8px; border: none; outline: none; font-size: 14px; }
+.wristband-wrapper { width: 100%; max-width: 400px; padding: 10px; background: #3a3a3a; border-radius: 15px; overflow-x: auto; overflow-y: hidden; cursor: grab; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+.wristband-wrapper:active { cursor: grabbing; }
+.wristband-row { display: flex; gap: 2px; padding: 10px 0; flex-wrap: nowrap; transform: scale(0.85); transform-origin: left center; }
+.wristband-slot { flex: 0 0 auto; width: 60px; height: 60px; background: url('https://i.ibb.co/Kc96Wj87/qolbaq.png') no-repeat center/contain; cursor: pointer; position: relative; transition: transform 0.2s, box-shadow 0.2s; scroll-snap-align: start; }
+.wristband-slot:hover { transform: scale(1.05); }
+@media(max-width:480px){ .wristband-wrapper{ max-width:95%; } .wristband-row{ transform: scale(0.75); } .wristband-slot{ width:40px;height:40px; } }
+.charm-section{ width:100%; max-width:450px; margin-top:20px; }
+.charm-group-title{ margin:10px 0 5px; font-size:16px; color:#f39c12; }
+.charm-container { display: flex; flex-wrap: wrap; gap: 10px; }
+.charm-wrapper { display: flex; flex-direction: column; align-items: center; width: 60px; background: #4a4a4a; padding: 8px; border-radius: 10px; }
+.charm { width: 50px; height: 50px; cursor: pointer; border: 2px solid transparent; object-fit: contain; border-radius: 8px; background: #fff; padding: 5px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
+.charm:hover { transform: scale(1.1); }
+.charm.selected { border-color:#f39c12; box-shadow:0 0 10px #f39c12; }
+.charm-label { font-size: 12px; margin-top: 3px; color:#eee; text-align:center; display:none; }
+.placed-charm { position:absolute; top:50%; left:50%; width:90%; height:90%; transform: translate(-50%,-50%); object-fit: contain; pointer-events: auto; animation: fadeIn 0.4s ease; }
+.placed-charm.fade-out { animation: fadeOut 0.3s forwards; }
+@keyframes fadeIn { from { opacity:0; transform:translate(-50%,-50%) scale(0.8); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
+@keyframes fadeOut { from { opacity:1; transform:translate(-50%,-50%) scale(1); } to { opacity:0; transform:translate(-50%,-50%) scale(0.5); } }
+.filter-buttons { margin:10px 0; display:flex; flex-wrap: wrap; gap:5px; justify-content:center; }
+.filter-buttons button { padding:6px 10px; border:none; border-radius:6px; background:#f39c12; color:#fff; cursor:pointer; font-size:12px; }
+#clearAll { margin-top:10px; padding:8px 12px; border:none; border-radius:8px; background:#e74c3c; color:#fff; cursor:pointer; }
+footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:30px; text-align:center; font-size:14px; border-top:1px solid #444; }
+footer a { color:#fff; margin:0 10px; text-decoration:none; }
+</style>
+</head>
+<body>
+<h1 style="text-shadow: 2px 2px 5px white;">
+  MeraStore 
+  <span style="
+    color: #006400;                /* tünd yaşıl mətni */
+    background-color: #00FF00;     /* açıq yaşıl fon */
+    padding: 0 4px;                /* fonun ətrafında boşluq */
+    border-radius: 4px;            /* kənarları yumşaldır */
+    box-shadow: 0 0 8px #00FF00;   /* açıq yaşıl parıltı */
+  ">☘︎</span>
+</h1>
+<h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik)</h2>
+
+<div class="filter-buttons">
+  <button data-group="">Bütün charmlar</button>
+  <button data-group="Heyvanlar">Heyvanlar</button>
+  <button data-group="Stil">Stil</button>
+  <button data-group="Mashin">Mashin</button>
+  <button data-group="Film">Film</button>
+  <button data-group="Ulduz&Ay">Ulduz&Ay</button>
+  <button data-group="Olke">Olke</button>
+  <button data-group="Nazar">Nazar</button>
+  <button data-group="8 Ball">8 Ball</button>
+</div>
+
+<button id="clearAll">Bütün charmları sil</button>
+
+<div class="wristband-wrapper" id="wristbandWrapper">
+  <div class="wristband-row" id="wristbandRow"></div>
+</div>
+
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="Charm axtar...">
+</div>
+
+<div class="charm-section" id="charmSection"></div>
+
+<footer>
+  <div>MeraStore © 2035</div>
+</footer>
+
+<script>
+const charmData = [
+  { src:'https://i.ibb.co/JWZJ4Zyw/kedi-removebg-preview.png', label:'Pishik Couple', group:'Heyvanlar' },
+  { src:'https://i.ibb.co/M5Md9gsy/glamur-removebg-preview.png', label:'Glamour', group:'Stil' },
+  { src:'https://i.ibb.co/rRXtxscf/image-2025-09-09-163507974.png', label:'Drama Queen', group:'Stil' },
+  { src:'https://i.ibb.co/kg44J4Hn/8-ball-bantik-removebg-preview.png', label:'8 Ball Bantik', group:'8 Ball' },
+  { src:'https://i.ibb.co/v4fptQyS/8ballqizil-removebg-preview-1.png', label:'8 Ball Qizil', group:'8 Ball' },
+  { src:'https://i.ibb.co/9mW5vKKG/akula-removebg-preview.png', label:'Akula', group:'Heyvanlar' },
+  { src:'https://i.ibb.co/1Yssgc8x/baligmavi-removebg-preview.png', label:'Balig Mavi', group:'Heyvanlar' },
+  { src:'https://i.ibb.co/ZpKf9kXL/baligturuncu-removebg-preview.png', label:'Balig Turuncu', group:'Heyvanlar' },
+  { src:'https://i.ibb.co/twMjpkt9/baliklar-removebg-preview.png', label:'Baliglar', group:'Heyvanlar' },
+  { src:'https://i.ibb.co/qLqVM3jD/nezer-removebg-preview.png', label:'Goz Muncug Urek', group:'Nazar' },
+  { src:'https://i.ibb.co/ch0hGBkv/image-2025-09-09-163653436.png', label:'Pingivin', group:'Heyvanlar' },
+  { src:'https://i.ibb.co/MkTY1ZwD/image-2025-09-09-164127569.png', label:'Barbie', group:'Film' },
+  { src:'https://i.ibb.co/23tXYvgs/biber-removebg-preview.png', label:'Biber', group:'Nazar' },
+  { src:'https://i.ibb.co/FqXfqtCF/ulduzicli-removebg-preview.png', label:'Ulduz', group:'Ulduz&Ay' },
+  { src:'https://i.ibb.co/DPHCjNMd/ferrari-removebg-preview.png', label:'Ferrari', group:'Mashin' },
+  { src:'https://i.ibb.co/9323wzsy/bmw-removebg-preview.png', label:'Bmw', group:'Mashin' },
+  { src:'https://i.ibb.co/rK7Ph2c0/porsh-removebg-preview.png', label:'Porsche', group:'Mashin' },
+  { src:'https://i.ibb.co/1tNWkRJP/merc-removebg-preview.png', label:'Mercedes', group:'Mashin' },
+  { src:'https://i.ibb.co/qYL4p9dY/lambo-removebg-preview.png', label:'Lambo', group:'Mashin' },
+  { src:'https://i.ibb.co/ccqgDyTW/barbiee-removebg-preview.png', label:'Barbie', group:'Film' },
+  { src:'https://i.ibb.co/b5q6TRJV/dovshan-removebg-preview.png', label:'Dovshan', group:'Heyvanlar' },
+  { src:'https://i.ibb.co/fGVPnQz5/paris-removebg-preview.png', label:'Paris', group:'Olke' },
+  { src:'https://i.ibb.co/TqRJ50pq/baygus-removebg-preview.png', label:'Baygus', group:'Heyvanlar' },
+  { src:'https://i.ibb.co/WN7grZ0P/hellokity-removebg-preview-1.png', label:'Hello Kitty', group:'Film' },
+  { src:'https://i.ibb.co/tPnS3hxj/fil-removebg-preview.png', label:'Fil', group:'Heyvanlar' },
+  { src:'https://i.ibb.co/qMSykh60/9-platform-removebg-preview.png', label:'Harry', group:'Film' },
+  { src:'https://i.ibb.co/WW9P1nkR/harry-removebg-preview.png', label:'Harry', group:'Film' },
+  { src:'https://i.ibb.co/hRvncTFS/arvadi-removebg-preview.png', label:'Harry', group:'Film' },
+  { src:'https://i.ibb.co/6RYKwBsL/italya-removebg-preview.png', label:'Italya', group:'Olke' },
+  { src:'https://i.ibb.co/pvYBj0yX/coxluulduz-removebg-preview.png', label:'Ulduz', group:'Ulduz&Ay' },
+  { src:'https://i.ibb.co/9kJPghF0/lasvegas-removebg-preview.png', label:'Las Vegas', group:'Olke' },
+  { src:'https://i.ibb.co/4nDKZN17/aymavi-removebg-preview.png', label:'Ay', group:'Ulduz&Ay' },
+  { src:'https://i.ibb.co/B2Y4VVL2/ay-removebg-preview.png', label:'Ay', group:'Ulduz&Ay' },
+  { src:'https://i.ibb.co/Q7Gmr0Dn/poker-removebg-preview.png', label:'Poker', group:'Stil' },
+  { src:'https://i.ibb.co/wFfCNH06/ulduz-removebg-preview.png', label:'Ulduz', group:'Ulduz&Ay' },
+  { src:'https://i.ibb.co/4wbMj9cx/eng-removebg-preview.png', label:'Eng', group:'Olke' },
+  { src:'https://i.ibb.co/99RHNwDC/amerika-removebg-preview.png', label:'Amerika', group:'Olke' },
+  { src:'https://i.ibb.co/TDwdc9Jp/tisbaga-removebg-preview.png', label:'Tisbosh', group:'Heyvanlar' }
+];
+
+const wristbandRow = document.getElementById('wristbandRow');
+const charmSection = document.getElementById('charmSection');
+const searchInput = document.getElementById('searchInput');
+let selectedCharm = null;
+
+// Charm kataloqu
+function renderCharms(filterText='', groupFilter=''){
+  charmSection.innerHTML = '';
+  const groups = {};
+  charmData.forEach(ch=>{
+    if(ch.label.toLowerCase().includes(filterText.toLowerCase()) && (groupFilter === '' || ch.group === groupFilter)){
+      if(!groups[ch.group]) groups[ch.group]=[];
+      groups[ch.group].push(ch);
+    }
+  });
+  Object.keys(groups).forEach(group=>{
+    const title = document.createElement('div');
+    title.className='charm-group-title';
+    title.textContent=group;
+    charmSection.appendChild(title);
+
+    const container=document.createElement('div');
+    container.className='charm-container';
+    groups[group].forEach(charm=>{
+      const wrapper=document.createElement('div');
+      wrapper.className='charm-wrapper';
+      const img=document.createElement('img');
+      img.src=charm.src;
+      img.className='charm';
+      img.addEventListener('click', ()=>{
+        document.querySelectorAll('.charm').forEach(c=>c.classList.remove('selected'));
+        img.classList.add('selected');
+        selectedCharm=charm;
+      });
+
+      wrapper.appendChild(img);
+      container.appendChild(wrapper);
+    });
+    charmSection.appendChild(container);
+  });
+}
+renderCharms();
+
+// Axtarış
+searchInput.addEventListener('input', e=> renderCharms(e.target.value));
+
+// Filter düymələri
+document.querySelectorAll('.filter-buttons button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const group = btn.getAttribute('data-group');
+    renderCharms('', group);
+  });
+});
+
+// Qolbaq slotları və localStorage
+for(let i=0;i<14;i++){
+  const slot = document.createElement('div');
+  slot.className='wristband-slot';
+
+  const savedCharms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
+  savedCharms.forEach(item=>{
+    if(item.slot===i){
+      const placed = document.createElement('img');
+      placed.src=item.src;
+      placed.className='placed-charm';
+      addRemoveEvent(placed, i);
+      slot.appendChild(placed);
+    }
+  });
+
+  slot.addEventListener('click', ()=>{
+    if(!selectedCharm) return;
+    const existing = slot.querySelector('.placed-charm');
+    if(existing){
+      existing.remove();
+      let charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
+      charms = charms.filter(c => !(c.slot===i));
+      localStorage.setItem('wristbandCharms', JSON.stringify(charms));
+    }
+    const placed = document.createElement('img');
+    placed.src=selectedCharm.src;
+    placed.className='placed-charm';
+    addRemoveEvent(placed, i);
+    slot.appendChild(placed);
+
+    const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
+    charms.push({slot:i, src:selectedCharm.src});
+    localStorage.setItem('wristbandCharms', JSON.stringify(charms));
+  });
+
+  wristbandRow.appendChild(slot);
+}
+
+// 2 kliklə silmək funksiyası
+function addRemoveEvent(placed, slotIndex){
+  let clickCount = 0;
+  placed.addEventListener('click', e=>{
+    e.stopPropagation();
+    clickCount++;
+    if(clickCount===2){
+      placed.classList.add('fade-out');
+      setTimeout(()=> placed.remove(), 300);
+      clickCount=0;
+      let charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
+      charms = charms.filter(c => !(c.slot===slotIndex && c.src===placed.src));
+      localStorage.setItem('wristbandCharms', JSON.stringify(charms));
+    }
+    setTimeout(()=>{ clickCount=0; }, 400);
+  });
+}
+
+// Bütün charmları sil düyməsi
+document.getElementById('clearAll').addEventListener('click', ()=>{
+  wristbandRow.querySelectorAll('.placed-charm').forEach(pc=> pc.remove());
+  localStorage.removeItem('wristbandCharms');
+});
+</script>
+</body>
+</html>
 
