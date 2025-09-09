@@ -14,56 +14,70 @@
       font-family: sans-serif;
       padding: 20px;
       color: #fff;
-      margin:0;
+      margin: 0;
     }
-    h1,h2 { color: #fff; }
-
-    /* Qolbaq container */
+    h1, h2 { color:#fff; }
+    /* Axtarış */
+    .search-box {
+      margin: 10px 0;
+      width: 100%;
+      max-width: 400px;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+    /* Qolbaq */
     .wristband-wrapper {
       width: 100%;
       max-width: 400px;
       padding: 10px;
-      background: #3a3a3a;   
+      background: #3a3a3a;
       border-radius: 15px;
-      overflow-x: auto; /* scrollbar görünür */
+      overflow-x: auto;
       overflow-y: hidden;
       cursor: grab;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-x;
     }
     .wristband-wrapper:active { cursor: grabbing; }
-
     .wristband-row {
       display: flex;
       gap: 2px;
       padding: 10px 0;
       flex-wrap: nowrap;
       transform: scale(0.85);
-      transform-origin: left center; /* sol tərəfdən başlayır */
+      transform-origin: left center;
     }
     .wristband-slot {
       flex: 0 0 auto;
-      width: 60px;
-      height: 60px;
+      width: 60px; height: 60px;
       background: url('https://i.ibb.co/Kc96Wj87/qolbaq.png') no-repeat center/contain;
       cursor: pointer;
       position: relative;
       transition: transform 0.2s, box-shadow 0.2s;
+      scroll-snap-align: start;
     }
     .wristband-slot:hover {
       transform: scale(1.1);
       box-shadow: 0 0 10px rgba(255,255,255,0.5);
     }
-    @media (max-width:480px){
-      .wristband-wrapper { max-width: 95%; }
-      .wristband-row { transform: scale(0.75); }
-      .wristband-slot { width: 40px; height: 40px; }
+    @media(max-width:480px){
+      .wristband-wrapper{ max-width:95%; }
+      .wristband-row{ transform: scale(0.75); }
+      .wristband-slot{ width:40px;height:40px; }
     }
-
     /* Charm kataloqu */
+    .charm-section{ width:100%; max-width:450px; margin-top:20px; }
+    .charm-group-title{ margin:10px 0 5px; font-size:16px; color:#f39c12; }
     .charm-container {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 20px;
       gap: 10px;
     }
     .charm-wrapper {
@@ -74,11 +88,9 @@
       background: #4a4a4a;
       padding: 8px;
       border-radius: 10px;
-      position: relative;
     }
     .charm {
-      width: 50px;
-      height: 50px;
+      width: 50px; height: 50px;
       cursor: pointer;
       border: 2px solid transparent;
       object-fit: contain;
@@ -89,172 +101,175 @@
     }
     .charm:hover { transform: scale(1.1); }
     .charm.selected {
-      border-color: #f39c12;
-      box-shadow: 0 0 10px #f39c12;
+      border-color:#f39c12;
+      box-shadow:0 0 10px #f39c12;
     }
     .charm-label {
       font-size: 12px;
       margin-top: 3px;
-      color: #eee;
-      text-align: center;
+      color:#eee;
+      text-align:center;
     }
-
-    /* Qolbaqda yerləşən charm */
+    /* Charm qolbaqda */
     .placed-charm {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      position:absolute;
+      top:50%; left:50%;
+      width:90%; height:90%;
+      transform: translate(-50%,-50%);
       object-fit: contain;
       pointer-events: auto;
       animation: fadeIn 0.4s ease;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
+      from { opacity:0; transform:translate(-50%,-50%) scale(0.8); }
+      to   { opacity:1; transform:translate(-50%,-50%) scale(1); }
     }
-
     /* Footer */
     footer {
-      width:100%;
-      background:#1f1f1f;
-      color:#fff;
-      padding:20px 0;
-      margin-top:30px;
-      text-align:center;
-      font-size:14px;
+      width:100%; background:#1f1f1f;
+      color:#fff; padding:20px 0; margin-top:30px;
+      text-align:center; font-size:14px;
       border-top:1px solid #444;
     }
-    footer a {
-      color:#fff;
-      margin:0 10px;
-      text-decoration:none;
-      font-size:24px;
-      transition: transform 0.2s, color 0.2s;
-    }
-    footer a:hover {
-      color:#f39c12;
-      transform: scale(1.3);
-    }
+    footer a { color:#fff; margin:0 10px; text-decoration:none; }
   </style>
 </head>
 <body>
   <h1>MeraStore</h1>
-  <h2>Charm seç və qolbaqda yerləşdir (sil → 2 dəfə klik)</h2>
+  <h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik / uzun bas)</h2>
 
-  <!-- Qolbaq hissəsi -->
+  <!-- Qolbaq -->
   <div class="wristband-wrapper" id="wristbandWrapper">
     <div class="wristband-row" id="wristbandRow"></div>
   </div>
 
-  <div class="charm-container" id="charmContainer"></div>
+  <!-- Axtarış -->
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Charm axtar...">
+  </div>
+
+  <!-- Charm bölməsi -->
+  <div class="charm-section" id="charmSection"></div>
 
   <!-- Footer -->
   <footer>
     <div>MeraStore © 2035</div>
     <div style="margin-top:8px;">
       <a href="https://www.instagram.com/merastore.az" target="_blank">
-        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" style="width:24px;height:24px;margin:0 8px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" style="width:24px;height:24px;">
       </a>
       <a href="https://www.tiktok.com/@merastore.az" target="_blank">
-        <img src="https://cdn-icons-png.flaticon.com/512/3046/3046128.png" alt="TikTok" style="width:24px;height:24px;margin:0 8px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/3046/3046128.png" alt="TikTok" style="width:24px;height:24px;">
       </a>
     </div>
   </footer>
 
-  <script>
-    const charmData = [
-      { src: 'https://i.ibb.co/JWZJ4Zyw/kedi-removebg-preview.png', label: 'Pishik Couple' },
-      { src: 'https://i.ibb.co/M5Md9gsy/glamur-removebg-preview.png', label: 'Glamour' },
-      { src: 'https://i.ibb.co/cSTdxSCy/charm.png', label: 'SpiderMan' },
-      { src: 'https://i.ibb.co/kg44J4Hn/8-ball-bantik-removebg-preview.png', label: '8 Ball Bantik' }
-    ];
+<script>
+const charmData = [
+  { src:'https://i.ibb.co/JWZJ4Zyw/kedi-removebg-preview.png', label:'Pishik Couple', group:'Heyvanlar' },
+  { src:'https://i.ibb.co/M5Md9gsy/glamur-removebg-preview.png', label:'Glamour', group:'Stil' },
+  { src:'https://i.ibb.co/cSTdxSCy/charm.png', label:'SpiderMan', group:'Film' },
+  { src:'https://i.ibb.co/kg44J4Hn/8-ball-bantik-removebg-preview.png', label:'8 Ball Bantik', group:'Klassik' },
+  { src:'https://i.ibb.co/Kc8nKcMS/hellokity-removebg-preview.png', label:'Hello Kitty', group:'Film' }
+];
 
-    const wristbandWrapper = document.getElementById('wristbandWrapper');
-    const wristbandRow = document.getElementById('wristbandRow');
-    const charmContainer = document.getElementById('charmContainer');
-    let selectedCharm = null;
+const wristbandRow = document.getElementById('wristbandRow');
+const charmSection = document.getElementById('charmSection');
+const searchInput = document.getElementById('searchInput');
+let selectedCharm = null;
 
-    // 14 qolbaq slotu
-    for(let i=0;i<14;i++){
-      const slot = document.createElement('div');
-      slot.className = 'wristband-slot';
+// Qolbaq slotları
+for(let i=0;i<14;i++){
+  const slot = document.createElement('div');
+  slot.className = 'wristband-slot';
+  slot.addEventListener('click', ()=>{
+    if(!selectedCharm) return;
+    if(slot.querySelector('.placed-charm')) return;
+    const placed = document.createElement('img');
+    placed.src = selectedCharm.src;
+    placed.className = 'placed-charm';
+    placed.addEventListener('dblclick', e=>{ e.stopPropagation(); placed.remove(); });
+    placed.addEventListener('touchstart', e=>{
+      placed.touchTimer = setTimeout(()=>placed.remove(),700);
+    });
+    placed.addEventListener('touchend', ()=> clearTimeout(placed.touchTimer));
+    slot.appendChild(placed);
+  });
+  wristbandRow.appendChild(slot);
+}
 
-      slot.addEventListener('click', ()=>{
-        if(!selectedCharm) return;
-        if(slot.querySelector('.placed-charm')) return;
-        const placed = document.createElement('img');
-        placed.src = selectedCharm.src;
-        placed.className = 'placed-charm';
-
-        // 2 dəfə klik → silinsin
-        placed.addEventListener('dblclick', e=>{
-          e.stopPropagation();
-          placed.remove();
-        });
-
-        // Mobil üçün uzun bas silmə
-        placed.addEventListener('touchstart', e=>{
-          placed.touchTimer = setTimeout(()=>placed.remove(), 1000);
-        });
-        placed.addEventListener('touchend', e=>{
-          clearTimeout(placed.touchTimer);
-        });
-
-        slot.appendChild(placed);
-      });
-
-      wristbandRow.appendChild(slot);
+// Charm kataloqu qruplaşdırılmış
+function renderCharms(filterText=''){
+  charmSection.innerHTML = '';
+  const groups = {};
+  charmData.forEach(ch=>{
+    if(ch.label.toLowerCase().includes(filterText.toLowerCase())){
+      if(!groups[ch.group]) groups[ch.group]=[];
+      groups[ch.group].push(ch);
     }
+  });
+  Object.keys(groups).forEach(group=>{
+    const title = document.createElement('div');
+    title.className='charm-group-title';
+    title.textContent=group;
+    charmSection.appendChild(title);
 
-    // Charm kataloqu
-    charmData.forEach(charm=>{
-      const wrapper = document.createElement('div');
+    const container=document.createElement('div');
+    container.className='charm-container';
+    groups[group].forEach(charm=>{
+      const wrapper=document.createElement('div');
       wrapper.className='charm-wrapper';
-
-      const img = document.createElement('img');
-      img.src = charm.src;
+      const img=document.createElement('img');
+      img.src=charm.src;
       img.className='charm';
       img.addEventListener('click', ()=>{
         document.querySelectorAll('.charm').forEach(c=>c.classList.remove('selected'));
         img.classList.add('selected');
-        selectedCharm = charm;
+        selectedCharm=charm;
       });
-
-      const label = document.createElement('div');
+      if(selectedCharm && selectedCharm.src===charm.src) img.classList.add('selected');
+      const label=document.createElement('div');
       label.className='charm-label';
       label.textContent=charm.label;
-
       wrapper.appendChild(img);
       wrapper.appendChild(label);
-      charmContainer.appendChild(wrapper);
+      container.appendChild(wrapper);
     });
+    charmSection.appendChild(container);
+  });
+}
+renderCharms();
 
-    // Drag-scroll qolbaq üçün (mouse və touch)
-    let isDown = false, startX, scrollLeft;
-    wristbandWrapper.addEventListener('mousedown', e=>{
-      isDown = true;
-      startX = e.pageX - wristbandWrapper.offsetLeft;
-      scrollLeft = wristbandWrapper.scrollLeft;
-    });
-    wristbandWrapper.addEventListener('mouseleave', ()=> isDown = false);
-    wristbandWrapper.addEventListener('mouseup', ()=> isDown = false);
-    wristbandWrapper.addEventListener('mousemove', e=>{
-      if(!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - wristbandWrapper.offsetLeft;
-      wristbandWrapper.scrollLeft = scrollLeft - (x - startX);
-    });
+// Axtarış
+searchInput.addEventListener('input', e=>{
+  renderCharms(e.target.value);
+});
 
-    wristbandWrapper.addEventListener('touchstart', e=>{
-      startX = e.touches[0].pageX - wristbandWrapper.offsetLeft;
-      scrollLeft = wristbandWrapper.scrollLeft;
-    });
-    wristbandWrapper.addEventListener('touchmove', e=>{
-      const x = e.touches[0].pageX - wristbandWrapper.offsetLeft;
-      wristbandWrapper.scrollLeft = scrollLeft - (x - startX);
-    });
-  </script>
+// Drag-scroll qolbaq
+const wristbandWrapper=document.getElementById('wristbandWrapper');
+let isDown=false,startX,scrollLeft;
+wristbandWrapper.addEventListener('mousedown', e=>{
+  isDown=true;
+  startX=e.pageX-wristbandWrapper.offsetLeft;
+  scrollLeft=wristbandWrapper.scrollLeft;
+});
+wristbandWrapper.addEventListener('mouseleave',()=>isDown=false);
+wristbandWrapper.addEventListener('mouseup',()=>isDown=false);
+wristbandWrapper.addEventListener('mousemove', e=>{
+  if(!isDown) return;
+  e.preventDefault();
+  const x=e.pageX-wristbandWrapper.offsetLeft;
+  wristbandWrapper.scrollLeft=scrollLeft-(x-startX);
+});
+// Touch
+wristbandWrapper.addEventListener('touchstart', e=>{
+  startX=e.touches[0].pageX-wristbandWrapper.offsetLeft;
+  scrollLeft=wristbandWrapper.scrollLeft;
+});
+wristbandWrapper.addEventListener('touchmove', e=>{
+  const x=e.touches[0].pageX-wristbandWrapper.offsetLeft;
+  wristbandWrapper.scrollLeft=scrollLeft-(x-startX);
+});
+</script>
 </body>
 </html>
