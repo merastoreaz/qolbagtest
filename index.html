@@ -19,10 +19,11 @@ h1, h2 { color:#fff; }
 .charm-group-title{ margin:10px 0 5px; font-size:16px; color:#f39c12; }
 .charm-container { display: flex; flex-wrap: wrap; gap: 10px; }
 .charm-wrapper { display: flex; flex-direction: column; align-items: center; width: 60px; background: #4a4a4a; padding: 8px; border-radius: 10px; }
-.charm { width: 50px; height: 50px; cursor: pointer; border: 2px solid transparent; object-fit: contain; border-radius: 8px; background: #fff; padding: 5px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
+.charm { width: 50px; height: 50px; cursor: pointer; border: 2px solid transparent; object-fit: contain; border-radius: 8px; background: #fff; padding: 5px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  -webkit-user-drag:none; user-drag:none; -webkit-touch-callout:none; }
 .charm:hover { transform: scale(1.1); }
 .charm.selected { border-color:#f39c12; box-shadow:0 0 10px #f39c12; }
-.placed-charm { position:absolute; top:50%; left:50%; width:90%; height:90%; transform: translate(-50%,-50%); object-fit: contain; pointer-events: auto; animation: fadeIn 0.4s ease; }
+.placed-charm { position:absolute; top:50%; left:50%; width:90%; height:90%; transform: translate(-50%,-50%); object-fit: contain; pointer-events: auto; animation: fadeIn 0.4s ease; -webkit-user-drag:none; user-drag:none; }
 .placed-charm.fade-out { animation: fadeOut 0.3s forwards; }
 @keyframes fadeIn { from { opacity:0; transform:translate(-50%,-50%) scale(0.8); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
 @keyframes fadeOut { from { opacity:1; transform:translate(-50%,-50%) scale(1); } to { opacity:0; transform:translate(-50%,-50%) scale(0.5); } }
@@ -39,7 +40,7 @@ footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:
   MeraStore 
   <span style="color:#006400;background-color:#00FF00;padding:0 4px;border-radius:4px;box-shadow:0 0 8px #00FF00;">☘︎</span>
 </h1>
-<h2>Charm seç, sürüklə və qolbaqda yerləşdir (sil → 2 klik)</h2>
+<h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik)</h2>
 
 <div class="filter-buttons">
   <button data-group="">Bütün charmlar</button>
@@ -112,6 +113,7 @@ const charmData = [
   { src:'https://i.ibb.co/TDwdc9Jp/tisbaga-removebg-preview.png', label:'Tisbosh', group:'Heyvanlar' }
 ];
 
+
 const wristbandRow = document.getElementById('wristbandRow');
 const charmSection = document.getElementById('charmSection');
 const searchInput = document.getElementById('searchInput');
@@ -142,16 +144,12 @@ function renderCharms(filterText='', groupFilter=''){
       img.src=charm.src;
       img.className='charm';
       img.title = charm.label;
-      img.setAttribute('draggable', true);
+      img.setAttribute('draggable', false); // drag qadağan
 
       img.addEventListener('click', ()=>{
         document.querySelectorAll('.charm').forEach(c=>c.classList.remove('selected'));
         img.classList.add('selected');
         selectedCharm=charm;
-      });
-
-      img.addEventListener('dragstart', e=>{
-        e.dataTransfer.setData('text/plain', JSON.stringify(charm));
       });
 
       wrapper.appendChild(img);
@@ -174,13 +172,6 @@ document.querySelectorAll('.filter-buttons button').forEach(btn=>{
 for(let i=0;i<14;i++){
   const slot = document.createElement('div');
   slot.className='wristband-slot';
-
-  slot.addEventListener('dragover', e=> e.preventDefault());
-  slot.addEventListener('drop', e=>{
-    e.preventDefault();
-    const charm = JSON.parse(e.dataTransfer.getData('text/plain'));
-    placeCharm(slot, charm, i);
-  });
 
   const savedCharms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
   savedCharms.forEach(item=>{
@@ -234,7 +225,6 @@ function addRemoveEvent(placed, slotIndex){
   });
 }
 
-// Bütününü sil (confirm ilə)
 document.getElementById('clearAll').addEventListener('click', ()=>{
   if(confirm("Bütün charmları silmək istədiyinizə əminsinizmi?")){
     wristbandRow.querySelectorAll('.placed-charm').forEach(pc=> pc.remove());
