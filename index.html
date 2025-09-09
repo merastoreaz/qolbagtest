@@ -43,16 +43,20 @@ h1, h2 { color:#fff; text-align:center; }
 }
 
 .header {
+  position: relative;
+  width: 100%;
   display: flex;
+  justify-content: center; /* MeraStore mərkəzdə */
   align-items: center;
-  justify-content: center; /* MeraStore mərkəzdə qalacaq */
-  gap: 30px; /* logolar ilə yazı arasındakı məsafə */
   margin-bottom: 15px;
 }
 
 .header-icons {
+  position: absolute;
+  left: 10px; /* sol tərəfdə logolar */
   display: flex;
-  gap: 15px; /* logoların öz arası */
+  gap: 12px; /* logolar arası məsafə */
+  align-items: center;
 }
 
 .clover {
@@ -72,12 +76,11 @@ h1, h2 { color:#fff; text-align:center; }
 }
 
 .header h1 {
-  margin: 0;
-  font-size: 28px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); /* tam mərkəz */
+  text-align: center;
   color: #fff;
-  text-shadow: 2px 2px 5px white;
-  display: flex;
-  align-items: center;
 }
 
 
@@ -199,10 +202,7 @@ footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:
     <span style="color:#006400;background-color:#00FF00;padding:0 4px;border-radius:4px;box-shadow:0 0 8px #00FF00;">☘︎</span>
   </h1>
 </div>
-
-</div>
-
-
+  
 <h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik)</h2>
 
 <div class="filter-buttons">
