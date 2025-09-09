@@ -44,22 +44,33 @@ h1, h2 { color:#fff; text-align:center; }
 
 .header {
   display: flex;
-  justify-content: center; /* MeraStore yazısını ortala */
   align-items: center;
-  gap: 12px;               /* yazı ilə ikonlar arasında məsafə */
+  justify-content: center;
+  gap: 15px; /* logolar ilə MeraStore arası məsafə */
+  margin-bottom: 15px;
 }
 
 .header-icons {
   display: flex;
-  align-items: center;
-  gap: 6px;               /* logolar arasında məsafə */
+  gap: 8px; /* logoların arasındakı boşluq */
 }
 
-.header-icons a img {
-  width: 24px;
-  height: 24px;
+.header-icons img {
+  width: 30px; /* ikon ölçüsü */
+  height: 30px;
+  object-fit: contain;
   cursor: pointer;
 }
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #fff;
+  text-shadow: 2px 2px 5px white;
+  display: flex;
+  align-items: center;
+}
+
 
 @media(max-width:480px){
   .header {
@@ -164,16 +175,22 @@ footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:
 </style>
 </head>
 <body>
+<!-- HEADER -->
 <div class="header">
   <div class="header-icons">
-    <a href="https://www.instagram.com/merastore" target="_blank">
+    <a href="https://www.instagram.com/yourpage" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
     </a>
-    <a href="https://www.tiktok.com/@merastore.az" target="_blank">
+    <a href="https://www.tiktok.com/@yourpage" target="_blank">
       <img src="https://cdn-icons-png.flaticon.com/512/3046/3046120.png" alt="TikTok">
     </a>
   </div>
-  <h1>MeraStore <span>☘︎</span></h1>
+  <h1>
+    MeraStore 
+    <span style="color:#006400;background-color:#00FF00;padding:0 4px;border-radius:4px;box-shadow:0 0 8px #00FF00;">☘︎</span>
+  </h1>
+</div>
+
 </div>
 
 
