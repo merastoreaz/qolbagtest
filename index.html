@@ -22,30 +22,24 @@ h1, h2 { color:#fff; }
 .charm { width: 50px; height: 50px; cursor: pointer; border: 2px solid transparent; object-fit: contain; border-radius: 8px; background: #fff; padding: 5px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
 .charm:hover { transform: scale(1.1); }
 .charm.selected { border-color:#f39c12; box-shadow:0 0 10px #f39c12; }
-.charm-label { font-size: 12px; margin-top: 3px; color:#eee; text-align:center; display:none; }
 .placed-charm { position:absolute; top:50%; left:50%; width:90%; height:90%; transform: translate(-50%,-50%); object-fit: contain; pointer-events: auto; animation: fadeIn 0.4s ease; }
 .placed-charm.fade-out { animation: fadeOut 0.3s forwards; }
 @keyframes fadeIn { from { opacity:0; transform:translate(-50%,-50%) scale(0.8); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
 @keyframes fadeOut { from { opacity:1; transform:translate(-50%,-50%) scale(1); } to { opacity:0; transform:translate(-50%,-50%) scale(0.5); } }
 .filter-buttons { margin:10px 0; display:flex; flex-wrap: wrap; gap:5px; justify-content:center; }
 .filter-buttons button { padding:6px 10px; border:none; border-radius:6px; background:#f39c12; color:#fff; cursor:pointer; font-size:12px; }
-#clearAll { margin-top:10px; padding:8px 12px; border:none; border-radius:8px; background:#e74c3c; color:#fff; cursor:pointer; }
+#clearAll, #shareBtn { margin-top:10px; padding:8px 12px; border:none; border-radius:8px; cursor:pointer; }
+#clearAll { background:#e74c3c; color:#fff; }
+#shareBtn { background:#3498db; color:#fff; }
 footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:30px; text-align:center; font-size:14px; border-top:1px solid #444; }
-footer a { color:#fff; margin:0 10px; text-decoration:none; }
 </style>
 </head>
 <body>
 <h1 style="text-shadow: 2px 2px 5px white;">
   MeraStore 
-  <span style="
-    color: #006400;                /* tünd yaşıl mətni */
-    background-color: #00FF00;     /* açıq yaşıl fon */
-    padding: 0 4px;                /* fonun ətrafında boşluq */
-    border-radius: 4px;            /* kənarları yumşaldır */
-    box-shadow: 0 0 8px #00FF00;   /* açıq yaşıl parıltı */
-  ">☘︎</span>
+  <span style="color:#006400;background-color:#00FF00;padding:0 4px;border-radius:4px;box-shadow:0 0 8px #00FF00;">☘︎</span>
 </h1>
-<h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik)</h2>
+<h2>Charm seç, sürüklə və qolbaqda yerləşdir (sil → 2 klik)</h2>
 
 <div class="filter-buttons">
   <button data-group="">Bütün charmlar</button>
@@ -60,6 +54,7 @@ footer a { color:#fff; margin:0 10px; text-decoration:none; }
 </div>
 
 <button id="clearAll">Bütün charmları sil</button>
+<button id="shareBtn">Dizaynı paylaş</button>
 
 <div class="wristband-wrapper" id="wristbandWrapper">
   <div class="wristband-row" id="wristbandRow"></div>
@@ -146,10 +141,17 @@ function renderCharms(filterText='', groupFilter=''){
       const img=document.createElement('img');
       img.src=charm.src;
       img.className='charm';
+      img.title = charm.label;
+      img.setAttribute('draggable', true);
+
       img.addEventListener('click', ()=>{
         document.querySelectorAll('.charm').forEach(c=>c.classList.remove('selected'));
         img.classList.add('selected');
         selectedCharm=charm;
+      });
+
+      img.addEventListener('dragstart', e=>{
+        e.dataTransfer.setData('text/plain', JSON.stringify(charm));
       });
 
       wrapper.appendChild(img);
@@ -160,10 +162,8 @@ function renderCharms(filterText='', groupFilter=''){
 }
 renderCharms();
 
-// Axtarış
 searchInput.addEventListener('input', e=> renderCharms(e.target.value));
 
-// Filter düymələri
 document.querySelectorAll('.filter-buttons button').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const group = btn.getAttribute('data-group');
@@ -171,10 +171,16 @@ document.querySelectorAll('.filter-buttons button').forEach(btn=>{
   });
 });
 
-// Qolbaq slotları və localStorage
 for(let i=0;i<14;i++){
   const slot = document.createElement('div');
   slot.className='wristband-slot';
+
+  slot.addEventListener('dragover', e=> e.preventDefault());
+  slot.addEventListener('drop', e=>{
+    e.preventDefault();
+    const charm = JSON.parse(e.dataTransfer.getData('text/plain'));
+    placeCharm(slot, charm, i);
+  });
 
   const savedCharms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
   savedCharms.forEach(item=>{
@@ -189,28 +195,28 @@ for(let i=0;i<14;i++){
 
   slot.addEventListener('click', ()=>{
     if(!selectedCharm) return;
-    const existing = slot.querySelector('.placed-charm');
-    if(existing){
-      existing.remove();
-      let charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
-      charms = charms.filter(c => !(c.slot===i));
-      localStorage.setItem('wristbandCharms', JSON.stringify(charms));
-    }
-    const placed = document.createElement('img');
-    placed.src=selectedCharm.src;
-    placed.className='placed-charm';
-    addRemoveEvent(placed, i);
-    slot.appendChild(placed);
-
-    const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
-    charms.push({slot:i, src:selectedCharm.src});
-    localStorage.setItem('wristbandCharms', JSON.stringify(charms));
+    placeCharm(slot, selectedCharm, i);
   });
 
   wristbandRow.appendChild(slot);
 }
 
-// 2 kliklə silmək funksiyası
+function placeCharm(slot, charm, i){
+  const existing = slot.querySelector('.placed-charm');
+  if(existing) existing.remove();
+
+  let charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
+  charms = charms.filter(c => !(c.slot===i));
+  const placed = document.createElement('img');
+  placed.src=charm.src;
+  placed.className='placed-charm';
+  addRemoveEvent(placed, i);
+  slot.appendChild(placed);
+
+  charms.push({slot:i, src:charm.src});
+  localStorage.setItem('wristbandCharms', JSON.stringify(charms));
+}
+
 function addRemoveEvent(placed, slotIndex){
   let clickCount = 0;
   placed.addEventListener('click', e=>{
@@ -228,12 +234,32 @@ function addRemoveEvent(placed, slotIndex){
   });
 }
 
-// Bütün charmları sil düyməsi
+// Bütününü sil (confirm ilə)
 document.getElementById('clearAll').addEventListener('click', ()=>{
-  wristbandRow.querySelectorAll('.placed-charm').forEach(pc=> pc.remove());
-  localStorage.removeItem('wristbandCharms');
+  if(confirm("Bütün charmları silmək istədiyinizə əminsinizmi?")){
+    wristbandRow.querySelectorAll('.placed-charm').forEach(pc=> pc.remove());
+    localStorage.removeItem('wristbandCharms');
+  }
 });
+
+// Paylaşma
+document.getElementById('shareBtn').addEventListener('click', ()=>{
+  const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
+  const encoded = btoa(JSON.stringify(charms));
+  const url = `${location.origin}${location.pathname}?design=${encoded}`;
+  navigator.clipboard.writeText(url).then(()=>{
+    alert("Dizayn linki kopyalandı!");
+  });
+});
+
+const params = new URLSearchParams(location.search);
+if(params.has('design')){
+  try{
+    const charms = JSON.parse(atob(params.get('design')));
+    localStorage.setItem('wristbandCharms', JSON.stringify(charms));
+    location.href = location.origin + location.pathname;
+  }catch(e){ console.error("Link oxunmadı:", e); }
+}
 </script>
 </body>
 </html>
-
