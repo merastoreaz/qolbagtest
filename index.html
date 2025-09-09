@@ -201,6 +201,11 @@
       wristbandRow.appendChild(slot);
     }
 
+    // Qolbağı səhifə açılarkən ortala
+    window.addEventListener("load", ()=>{
+      wristbandWrapper.scrollLeft = (wristbandRow.scrollWidth - wristbandWrapper.clientWidth) / 2;
+    });
+
     // Charm kataloqu
     charmData.forEach(charm=>{
       const wrapper = document.createElement('div');
