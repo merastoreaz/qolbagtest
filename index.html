@@ -91,54 +91,43 @@ h1, h2 { color:#fff; text-align:center; }
 
 .action-buttons {
   display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin: 20px 0;
-  flex-wrap: wrap;
+  flex-direction: column; /* alt-alta */
+  gap: 12px; /* düymələr arası məsafə */
+  align-items: center; /* mərkəzə düzlə */
+  margin: 15px 0;
 }
 
 .action-buttons button {
-  flex: 1 1 160px;         /* Düymənin minimal eni */
-  padding: 14px 0;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
+  flex: unset; /* yan-yana ölçünü qaldırmır */
+  width: 200px; /* daha kompakt düymə */
+  padding: 10px 0;
+  font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
-  color: #fff;
-  text-transform: uppercase;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-  transition: all 0.3s ease, transform 0.2s;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
   background-size: 200% 100%;
+  transition: all 0.3s ease, transform 0.2s;
 }
 
-/* Bütün charmları sil düyməsi */
+/* Daha tünd gradientlər */
 #clearAll {
-  background-image: linear-gradient(135deg, #e74c3c, #c0392b);
+  background-image: linear-gradient(135deg, #c0392b, #922b21);
 }
 #clearAll:hover {
   background-position: right center;
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.5);
 }
 
-/* Dizaynı paylaş düyməsi */
 #shareBtn {
-  background-image: linear-gradient(135deg, #3498db, #2980b9);
+  background-image: linear-gradient(135deg, #2980b9, #1f4f7a);
 }
 #shareBtn:hover {
   background-position: right center;
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.5);
 }
 
-/* Mobil üçün uyğunlaşma */
-@media(max-width:480px){
-  .action-buttons{
-    flex-direction: column;
-    gap: 12px;
-  }
-}
 
 footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:30px; text-align:center; font-size:14px; border-top:1px solid #444; }
 </style>
