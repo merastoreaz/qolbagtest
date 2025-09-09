@@ -188,11 +188,35 @@ footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:
 </head>
 <body>
 <!-- HEADER -->
-  <h1>
-    MeraStore 
-    <span style="color:#006400;background-color:#00FF00;padding:0 4px;border-radius:4px;box-shadow:0 0 8px #00FF00;">☘︎</span>
-  </h1>
-</div>
+<h1 style="
+  font-family: 'Poppins', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: 1px;
+">
+  <!-- MeraStore -->
+  <span style="
+    background: linear-gradient(90deg, #ffffff, #e6e6e6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 8px rgba(255,255,255,0.6), 0 0 4px rgba(255,255,255,0.4);
+    transition: all 0.3s ease;
+  ">MeraStore</span>
+
+  <!-- Yonca (içi şəffaf, kontur parıltılı) -->
+  <span style="
+    font-size: 1em;
+    color: transparent; /* içi boş saxlayır */
+    -webkit-text-stroke: 2px #00ff00; /* yaşıl kontur */
+    text-shadow: 0 0 12px #00ff00, 0 0 6px #00ff00; /* yalnız kontur parıltısı */
+    -webkit-text-fill-color: transparent; /* içi parıldamasın */
+  ">☘︎</span>
+</h1>
+
   
 <h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik)</h2>
 
