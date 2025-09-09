@@ -42,6 +42,35 @@ h1, h2 { color:#fff; text-align:center; }
   transition: transform 0.2s, box-shadow 0.2s; /* hover animasiyası üçün */
 }
 
+.header {
+  display: flex;
+  justify-content: center; /* MeraStore yazısını ortala */
+  align-items: center;
+  gap: 12px;               /* yazı ilə ikonlar arasında məsafə */
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;               /* logolar arasında məsafə */
+}
+
+.header-icons a img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+@media(max-width:480px){
+  .header {
+    gap: 8px;
+  }
+  .header-icons a img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 .placed-charm:hover {
   transform: translate(-50%, -50%) scale(1.1); /* hover zamanı böyümə */
   box-shadow: 0 0 12px #f39c12;               /* parıltı */
@@ -135,10 +164,18 @@ footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:
 </style>
 </head>
 <body>
-<h1 style="text-shadow: 2px 2px 5px white;">
-  MeraStore 
-  <span style="color:#006400;background-color:#00FF00;padding:0 4px;border-radius:4px;box-shadow:0 0 8px #00FF00;">☘︎</span>
-</h1>
+<div class="header">
+  <div class="header-icons">
+    <a href="https://www.instagram.com/yourpage" target="_blank">
+      <img src="instagram_icon.png" alt="Instagram">
+    </a>
+    <a href="https://www.tiktok.com/@yourpage" target="_blank">
+      <img src="tiktok_icon.png" alt="TikTok">
+    </a>
+  </div>
+  <h1>MeraStore <span>☘︎</span></h1>
+</div>
+
 <h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik)</h2>
 
 <div class="filter-buttons">
