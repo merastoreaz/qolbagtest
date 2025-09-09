@@ -114,10 +114,6 @@ const charmData = [
   { src:'https://i.ibb.co/TDwdc9Jp/tisbaga-removebg-preview.png', label:'Tisbosh', group:'Heyvanlar' }
 ];
 
-// Səs faylları
-const placeSound = new Audio('https://freesound.org/data/previews/522/522928_11290507-lq.mp3'); // Charm yerləşdirərkən
-const removeSound = new Audio('https://freesound.org/data/previews/522/522927_11290507-lq.mp3'); // Charm silərkən
-
 const wristbandRow = document.getElementById('wristbandRow');
 const charmSection = document.getElementById('charmSection');
 const favoriteSection = document.getElementById('favoriteSection');
@@ -267,11 +263,6 @@ function placeCharm(slot, charm, i){
 
   charms.push({slot:i, src:charm.src});
   localStorage.setItem('wristbandCharms', JSON.stringify(charms));
-
-  // Səs və haptik
-  placeSound.currentTime = 0;
-  placeSound.play().catch(e=>console.log(e));
-  if(navigator.vibrate) navigator.vibrate(50); // 50ms haptik
 }
 
 function addRemoveEvent(placed, slotIndex){
@@ -282,15 +273,10 @@ function addRemoveEvent(placed, slotIndex){
     if(clickCount===2){
       placed.classList.add('fade-out');
       setTimeout(()=> placed.remove(), 300);
-
+      clickCount=0;
       let charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
       charms = charms.filter(c => !(c.slot===slotIndex && c.src===placed.src));
       localStorage.setItem('wristbandCharms', JSON.stringify(charms));
-
-      // Səs və haptik
-      removeSound.currentTime = 0;
-      removeSound.play().catch(e=>console.log(e));
-      if(navigator.vibrate) navigator.vibrate([30,20,30]); // qısa vibrasiya patterni
     }
     setTimeout(()=>{ clickCount=0; }, 400);
   });
