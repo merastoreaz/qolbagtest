@@ -93,40 +93,45 @@ h1, h2 { color:#fff; text-align:center; }
 /* ...mövcud CSS ... */
 
 /* Yeni effektli və tünd gradientlər */
-#clearAll, #shareBtn {
-  margin-top: 10px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+.action-buttons {
+  display:flex;
+  gap:10px;
+  margin-top:10px;
 }
 
-/* Bütün charmları sil */
+.action-buttons button {
+  flex:1;
+  text-align:center;
+  padding:10px 0;
+  border:none;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+}
+
 #clearAll {
-  background: linear-gradient(145deg, #c0392b, #e74c3c); /* tünd qırmızı gradient */
-  color: #fff;
+  background: linear-gradient(145deg, #e74c3c, #c0392b);
+  color:#fff;
 }
 
 #clearAll:hover {
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 12px rgba(0,0,0,0.6);
-  background: linear-gradient(145deg, #e74c3c, #c0392b);
+  box-shadow: 0 8px 12px rgba(0,0,0,0.7);
+  background: linear-gradient(145deg, #c0392b, #a93226);
 }
 
-/* Dizaynı paylaş */
 #shareBtn {
-  background: linear-gradient(145deg, #2980b9, #3498db); /* tünd mavi gradient */
-  color: #fff;
+  background: linear-gradient(145deg, #3498db, #2980b9);
+  color:#fff;
 }
 
 #shareBtn:hover {
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 12px rgba(0,0,0,0.6);
-  background: linear-gradient(145deg, #3498db, #2980b9);
+  box-shadow: 0 8px 12px rgba(0,0,0,0.7);
+  background: linear-gradient(145deg, #2980b9, #1f618d);
 }
 </style>
 
