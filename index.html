@@ -5,167 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MeraStore / Qolbaq və Charm</title>
   <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      background: #2b2b2b;
-      font-family: sans-serif;
-      padding: 20px;
-      color: #fff;
-      margin: 0;
-    }
+    body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; background: #2b2b2b; font-family: sans-serif; padding: 20px; color: #fff; margin: 0; }
     h1, h2 { color:#fff; }
-    /* Axtarış */
-    .search-box {
-      margin: 10px 0;
-      width: 100%;
-      max-width: 400px;
-    }
-    .search-box input {
-      width: 100%;
-      padding: 8px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 14px;
-    }
-    /* Qolbaq */
-    .wristband-wrapper {
-      width: 100%;
-      max-width: 400px;
-      padding: 10px;
-      background: #3a3a3a;
-      border-radius: 15px;
-      overflow-x: auto;
-      overflow-y: hidden;
-      cursor: grab;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      touch-action: pan-x;
-    }
+    .search-box { margin: 10px 0; width: 100%; max-width: 400px; }
+    .search-box input { width: 100%; padding: 8px; border-radius: 8px; border: none; outline: none; font-size: 14px; }
+    .wristband-wrapper { width: 100%; max-width: 400px; padding: 10px; background: #3a3a3a; border-radius: 15px; overflow-x: auto; overflow-y: hidden; cursor: grab; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
     .wristband-wrapper:active { cursor: grabbing; }
-    .wristband-row {
-      display: flex;
-      gap: 2px;
-      padding: 10px 0;
-      flex-wrap: nowrap;
-      transform: scale(0.85);
-      transform-origin: left center;
-    }
-    .wristband-slot {
-      flex: 0 0 auto;
-      width: 60px; height: 60px;
-      background: url('https://i.ibb.co/Kc96Wj87/qolbaq.png') no-repeat center/contain;
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.2s, box-shadow 0.2s;
-      scroll-snap-align: start;
-    }
-    .wristband-slot:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 10px rgba(255,255,255,0.5);
-    }
-    @media(max-width:480px){
-      .wristband-wrapper{ max-width:95%; }
-      .wristband-row{ transform: scale(0.75); }
-      .wristband-slot{ width:40px;height:40px; }
-    }
-    /* Charm kataloqu */
+    .wristband-row { display: flex; gap: 2px; padding: 10px 0; flex-wrap: nowrap; transform: scale(0.85); transform-origin: left center; }
+    .wristband-slot { flex: 0 0 auto; width: 60px; height: 60px; background: url('https://i.ibb.co/Kc96Wj87/qolbaq.png') no-repeat center/contain; cursor: pointer; position: relative; transition: transform 0.2s, box-shadow 0.2s; scroll-snap-align: start; }
+    .wristband-slot:hover { transform: scale(1.1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+    @media(max-width:480px){ .wristband-wrapper{ max-width:95%; } .wristband-row{ transform: scale(0.75); } .wristband-slot{ width:40px;height:40px; } }
     .charm-section{ width:100%; max-width:450px; margin-top:20px; }
     .charm-group-title{ margin:10px 0 5px; font-size:16px; color:#f39c12; }
-    .charm-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .charm-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 60px;
-      background: #4a4a4a;
-      padding: 8px;
-      border-radius: 10px;
-    }
-    .charm {
-      width: 50px; height: 50px;
-      cursor: pointer;
-      border: 2px solid transparent;
-      object-fit: contain;
-      border-radius: 8px;
-      background: #fff;
-      padding: 5px;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    }
+    .charm-container { display: flex; flex-wrap: wrap; gap: 10px; }
+    .charm-wrapper { display: flex; flex-direction: column; align-items: center; width: 60px; background: #4a4a4a; padding: 8px; border-radius: 10px; }
+    .charm { width: 50px; height: 50px; cursor: pointer; border: 2px solid transparent; object-fit: contain; border-radius: 8px; background: #fff; padding: 5px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
     .charm:hover { transform: scale(1.1); }
-    .charm.selected {
-      border-color:#f39c12;
-      box-shadow:0 0 10px #f39c12;
-    }
-    .charm-label {
-      font-size: 12px;
-      margin-top: 3px;
-      color:#eee;
-      text-align:center;
-    }
-    /* Charm qolbaqda */
-    .placed-charm {
-      position:absolute;
-      top:50%; left:50%;
-      width:90%; height:90%;
-      transform: translate(-50%,-50%);
-      object-fit: contain;
-      pointer-events: auto;
-      animation: fadeIn 0.4s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity:0; transform:translate(-50%,-50%) scale(0.8); }
-      to   { opacity:1; transform:translate(-50%,-50%) scale(1); }
-    }
-    /* Footer */
-    footer {
-      width:100%; background:#1f1f1f;
-      color:#fff; padding:20px 0; margin-top:30px;
-      text-align:center; font-size:14px;
-      border-top:1px solid #444;
-    }
+    .charm.selected { border-color:#f39c12; box-shadow:0 0 10px #f39c12; }
+    .charm-label { font-size: 12px; margin-top: 3px; color:#eee; text-align:center; display:none; }
+    .placed-charm { position:absolute; top:50%; left:50%; width:90%; height:90%; transform: translate(-50%,-50%); object-fit: contain; pointer-events: auto; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity:0; transform:translate(-50%,-50%) scale(0.8); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
+    footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:30px; text-align:center; font-size:14px; border-top:1px solid #444; }
     footer a { color:#fff; margin:0 10px; text-decoration:none; }
-	
-	.charm-label { 
-  display: none; 
-}
   </style>
 </head>
 <body>
   <h1>MeraStore</h1>
-  <h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik / uzun bas)</h2>
+  <h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik)</h2>
 
-  <!-- Qolbaq -->
   <div class="wristband-wrapper" id="wristbandWrapper">
     <div class="wristband-row" id="wristbandRow"></div>
   </div>
 
-  <!-- Axtarış -->
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="Charm axtar...">
   </div>
 
-  <!-- Charm bölməsi -->
   <div class="charm-section" id="charmSection"></div>
 
-  <!-- Footer -->
   <footer>
     <div>MeraStore © 2035</div>
-    <div style="margin-top:8px;">
-      <a href="https://www.instagram.com/merastore.az" target="_blank">
-        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" style="width:24px;height:24px;">
-      </a>
-      <a href="https://www.tiktok.com/@merastore.az" target="_blank">
-        <img src="https://cdn-icons-png.flaticon.com/512/3046/3046128.png" alt="TikTok" style="width:24px;height:24px;">
-      </a>
-    </div>
   </footer>
 
 <script>
@@ -188,27 +67,7 @@ const charmSection = document.getElementById('charmSection');
 const searchInput = document.getElementById('searchInput');
 let selectedCharm = null;
 
-// Qolbaq slotları
-for(let i=0;i<14;i++){
-  const slot = document.createElement('div');
-  slot.className = 'wristband-slot';
-  slot.addEventListener('click', ()=>{
-    if(!selectedCharm) return;
-    if(slot.querySelector('.placed-charm')) return;
-    const placed = document.createElement('img');
-    placed.src = selectedCharm.src;
-    placed.className = 'placed-charm';
-    placed.addEventListener('dblclick', e=>{ e.stopPropagation(); placed.remove(); });
-    placed.addEventListener('touchstart', e=>{
-      placed.touchTimer = setTimeout(()=>placed.remove(),700);
-    });
-    placed.addEventListener('touchend', ()=> clearTimeout(placed.touchTimer));
-    slot.appendChild(placed);
-  });
-  wristbandRow.appendChild(slot);
-}
-
-// Charm kataloqu qruplaşdırılmış
+// Charm kataloqu
 function renderCharms(filterText=''){
   charmSection.innerHTML = '';
   const groups = {};
@@ -237,12 +96,7 @@ function renderCharms(filterText=''){
         img.classList.add('selected');
         selectedCharm=charm;
       });
-      if(selectedCharm && selectedCharm.src===charm.src) img.classList.add('selected');
-      const label=document.createElement('div');
-      label.className='charm-label';
-      label.textContent=charm.label;
       wrapper.appendChild(img);
-      wrapper.appendChild(label);
       container.appendChild(wrapper);
     });
     charmSection.appendChild(container);
@@ -251,35 +105,58 @@ function renderCharms(filterText=''){
 renderCharms();
 
 // Axtarış
-searchInput.addEventListener('input', e=>{
-  renderCharms(e.target.value);
-});
+searchInput.addEventListener('input', e=> renderCharms(e.target.value));
 
-// Drag-scroll qolbaq
-const wristbandWrapper=document.getElementById('wristbandWrapper');
-let isDown=false,startX,scrollLeft;
-wristbandWrapper.addEventListener('mousedown', e=>{
-  isDown=true;
-  startX=e.pageX-wristbandWrapper.offsetLeft;
-  scrollLeft=wristbandWrapper.scrollLeft;
-});
-wristbandWrapper.addEventListener('mouseleave',()=>isDown=false);
-wristbandWrapper.addEventListener('mouseup',()=>isDown=false);
-wristbandWrapper.addEventListener('mousemove', e=>{
-  if(!isDown) return;
-  e.preventDefault();
-  const x=e.pageX-wristbandWrapper.offsetLeft;
-  wristbandWrapper.scrollLeft=scrollLeft-(x-startX);
-});
-// Touch
-wristbandWrapper.addEventListener('touchstart', e=>{
-  startX=e.touches[0].pageX-wristbandWrapper.offsetLeft;
-  scrollLeft=wristbandWrapper.scrollLeft;
-});
-wristbandWrapper.addEventListener('touchmove', e=>{
-  const x=e.touches[0].pageX-wristbandWrapper.offsetLeft;
-  wristbandWrapper.scrollLeft=scrollLeft-(x-startX);
-});
+// Qolbaq slotları və localStorage
+for(let i=0;i<14;i++){
+  const slot = document.createElement('div');
+  slot.className='wristband-slot';
+
+  // Səhifə yüklənəndə localStorage-dan charm yerləşdir
+  const savedCharms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
+  savedCharms.forEach(item=>{
+    if(item.slot===i){
+      const placed = document.createElement('img');
+      placed.src=item.src;
+      placed.className='placed-charm';
+      addRemoveEvent(placed, i);
+      slot.appendChild(placed);
+    }
+  });
+
+  slot.addEventListener('click', ()=>{
+    if(!selectedCharm) return;
+    if(slot.querySelector('.placed-charm')) return;
+    const placed = document.createElement('img');
+    placed.src=selectedCharm.src;
+    placed.className='placed-charm';
+    addRemoveEvent(placed, i);
+    slot.appendChild(placed);
+
+    const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
+    charms.push({slot:i, src:selectedCharm.src});
+    localStorage.setItem('wristbandCharms', JSON.stringify(charms));
+  });
+
+  wristbandRow.appendChild(slot);
+}
+
+// 2 kliklə silmək funksiyası
+function addRemoveEvent(placed, slotIndex){
+  let clickCount = 0;
+  placed.addEventListener('click', e=>{
+    e.stopPropagation();
+    clickCount++;
+    if(clickCount===2){
+      placed.remove();
+      clickCount=0;
+      let charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
+      charms = charms.filter(c => !(c.slot===slotIndex && c.src===placed.src));
+      localStorage.setItem('wristbandCharms', JSON.stringify(charms));
+    }
+    setTimeout(()=>{ clickCount=0; }, 400);
+  });
+}
 </script>
 </body>
 </html>
