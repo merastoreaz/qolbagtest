@@ -6,7 +6,7 @@
 <title>MeraStore / Qolbaq və Charm</title>
 <style>
 body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; background: #2b2b2b; font-family: sans-serif; padding: 20px; color: #fff; margin: 0; }
-h1, h2 { color:#fff; }
+h1, h2 { color:#fff; text-align:center; }
 .search-box { margin: 10px 0; width: 100%; max-width: 400px; }
 .search-box input { width: 100%; padding: 8px; border-radius: 8px; border: none; outline: none; font-size: 14px; }
 .wristband-wrapper { width: 100%; max-width: 400px; padding: 10px; background: #3a3a3a; border-radius: 15px; overflow-x: auto; overflow-y: hidden; cursor: grab; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
@@ -18,13 +18,13 @@ h1, h2 { color:#fff; }
 .charm-section{ width:100%; max-width:450px; margin-top:20px; }
 .charm-group-title{ margin:10px 0 5px; font-size:16px; color:#f39c12; }
 .charm-container { display: flex; flex-wrap: wrap; gap: 10px; }
-.charm-wrapper { display: flex; flex-direction: column; align-items: center; width: 60px; background: #4a4a4a; padding: 8px; border-radius: 10px; }
-.charm { width: 50px; height: 50px; cursor: pointer; border: 2px solid transparent; object-fit: contain; border-radius: 8px; background: #fff; padding: 5px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-  -webkit-user-drag:none; user-drag:none; -webkit-touch-callout:none; }
+.charm-wrapper { display: flex; flex-direction: column; align-items: center; width: 60px; background: #4a4a4a; padding: 8px; border-radius: 10px; position: relative; }
+.charm { width: 50px; height: 50px; cursor: pointer; border: 2px solid transparent; object-fit: contain; border-radius: 8px; background: #fff; padding: 5px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; -webkit-user-drag:none; user-drag:none; -webkit-touch-callout:none; }
 .charm:hover { transform: scale(1.1); }
 .charm.selected { border-color:#f39c12; box-shadow:0 0 10px #f39c12; }
 .placed-charm { position:absolute; top:50%; left:50%; width:90%; height:90%; transform: translate(-50%,-50%); object-fit: contain; pointer-events: auto; animation: fadeIn 0.4s ease; -webkit-user-drag:none; user-drag:none; }
 .placed-charm.fade-out { animation: fadeOut 0.3s forwards; }
+.favorite-btn { position:absolute; bottom:2px; right:2px; font-size:12px; border:none; border-radius:50%; background:#f39c12; color:#fff; cursor:pointer; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
 @keyframes fadeIn { from { opacity:0; transform:translate(-50%,-50%) scale(0.8); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
 @keyframes fadeOut { from { opacity:1; transform:translate(-50%,-50%) scale(1); } to { opacity:0; transform:translate(-50%,-50%) scale(0.5); } }
 .filter-buttons { margin:10px 0; display:flex; flex-wrap: wrap; gap:5px; justify-content:center; }
@@ -65,6 +65,7 @@ footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:
   <input type="text" id="searchInput" placeholder="Charm axtar...">
 </div>
 
+<div id="favoriteSection" class="charm-section"></div>
 <div class="charm-section" id="charmSection"></div>
 
 <footer>
@@ -113,13 +114,53 @@ const charmData = [
   { src:'https://i.ibb.co/TDwdc9Jp/tisbaga-removebg-preview.png', label:'Tisbosh', group:'Heyvanlar' }
 ];
 
-
 const wristbandRow = document.getElementById('wristbandRow');
 const charmSection = document.getElementById('charmSection');
+const favoriteSection = document.getElementById('favoriteSection');
 const searchInput = document.getElementById('searchInput');
 let selectedCharm = null;
 
-// Charm kataloqu
+let favoriteCharms = JSON.parse(localStorage.getItem('favoriteCharms') || '[]');
+
+function renderFavorites() {
+  favoriteSection.innerHTML = '<h3 style="color:#f39c12;">Bəyənilən Charmlar</h3>';
+  if (favoriteCharms.length === 0) {
+    favoriteSection.innerHTML += "<p>Heç bir bəyənilən charm yoxdur</p>";
+    return;
+  }
+  const favContainer = document.createElement('div');
+  favContainer.className = 'charm-container';
+  favoriteCharms.forEach(charm => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'charm-wrapper';
+    const img = document.createElement('img');
+    img.src = charm.src;
+    img.className = 'charm';
+    img.title = charm.label;
+    img.addEventListener('click', () => {
+      document.querySelectorAll('.charm').forEach(c => c.classList.remove('selected'));
+      img.classList.add('selected');
+      selectedCharm = charm;
+    });
+    wrapper.appendChild(img);
+
+    const favBtn = document.createElement('button');
+    favBtn.className='favorite-btn';
+    favBtn.textContent = '❤';
+    favBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      favoriteCharms = favoriteCharms.filter(f => f.src !== charm.src);
+      localStorage.setItem('favoriteCharms', JSON.stringify(favoriteCharms));
+      renderFavorites();
+      renderCharms(searchInput.value);
+    });
+    wrapper.appendChild(favBtn);
+
+    favContainer.appendChild(wrapper);
+  });
+  favoriteSection.appendChild(favContainer);
+}
+
 function renderCharms(filterText='', groupFilter=''){
   charmSection.innerHTML = '';
   const groups = {};
@@ -129,6 +170,12 @@ function renderCharms(filterText='', groupFilter=''){
       groups[ch.group].push(ch);
     }
   });
+
+  if(Object.keys(groups).length === 0){
+    charmSection.textContent = "Axtarış nəticəsi tapılmadı";
+    return;
+  }
+
   Object.keys(groups).forEach(group=>{
     const title = document.createElement('div');
     title.className='charm-group-title';
@@ -144,31 +191,45 @@ function renderCharms(filterText='', groupFilter=''){
       img.src=charm.src;
       img.className='charm';
       img.title = charm.label;
-      img.setAttribute('draggable', false); // drag qadağan
-
+      img.setAttribute('draggable', false);
       img.addEventListener('click', ()=>{
         document.querySelectorAll('.charm').forEach(c=>c.classList.remove('selected'));
         img.classList.add('selected');
         selectedCharm=charm;
       });
 
+      const favBtn = document.createElement('button');
+      favBtn.className='favorite-btn';
+      favBtn.textContent = favoriteCharms.find(f=>f.src===charm.src)? '❤' : '♡';
+      favBtn.addEventListener('click',(e)=>{
+        e.stopPropagation();
+        if(favoriteCharms.find(f=>f.src===charm.src)){
+          favoriteCharms = favoriteCharms.filter(f=>f.src!==charm.src);
+        } else {
+          favoriteCharms.push(charm);
+        }
+        localStorage.setItem('favoriteCharms', JSON.stringify(favoriteCharms));
+        renderFavorites();
+        renderCharms(searchInput.value);
+      });
+
       wrapper.appendChild(img);
+      wrapper.appendChild(favBtn);
       container.appendChild(wrapper);
     });
     charmSection.appendChild(container);
   });
 }
+
+renderFavorites();
 renderCharms();
 
 searchInput.addEventListener('input', e=> renderCharms(e.target.value));
-
 document.querySelectorAll('.filter-buttons button').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const group = btn.getAttribute('data-group');
-    renderCharms('', group);
-  });
+  btn.addEventListener('click', ()=> renderCharms('', btn.getAttribute('data-group')));
 });
 
+// Qolbaq slotları
 for(let i=0;i<14;i++){
   const slot = document.createElement('div');
   slot.className='wristband-slot';
@@ -184,11 +245,7 @@ for(let i=0;i<14;i++){
     }
   });
 
-  slot.addEventListener('click', ()=>{
-    if(!selectedCharm) return;
-    placeCharm(slot, selectedCharm, i);
-  });
-
+  slot.addEventListener('click', ()=>{ if(selectedCharm) placeCharm(slot, selectedCharm, i); });
   wristbandRow.appendChild(slot);
 }
 
@@ -232,14 +289,11 @@ document.getElementById('clearAll').addEventListener('click', ()=>{
   }
 });
 
-// Paylaşma
 document.getElementById('shareBtn').addEventListener('click', ()=>{
   const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
   const encoded = btoa(JSON.stringify(charms));
   const url = `${location.origin}${location.pathname}?design=${encoded}`;
-  navigator.clipboard.writeText(url).then(()=>{
-    alert("Dizayn linki kopyalandı!");
-  });
+  navigator.clipboard.writeText(url).then(()=> alert("Dizayn linki kopyalandı!"));
 });
 
 const params = new URLSearchParams(location.search);
