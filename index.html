@@ -194,6 +194,36 @@ h2 {
   margin-top: 5px; /* üst boşluğu azaldır */
 }
 
+.clover-animated {
+  font-size: 1em;
+  color: transparent; /* içi boş qalır */
+  -webkit-text-stroke: 2px #00ff00; /* yaşıl kontur */
+  text-shadow: 0 0 12px #00ff00, 0 0 6px #00ff00;
+  -webkit-text-fill-color: transparent;
+
+  display: inline-block;
+  animation: spin 6s linear infinite, pulse 2.5s ease-in-out infinite;
+}
+
+/* Fırlanma */
+@keyframes spin {
+  0%   { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Nəfəs effekti (parıltı + böyümə) */
+@keyframes pulse {
+  0%, 100% {
+    text-shadow: 0 0 10px #00ff00, 0 0 4px #00ff00;
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 25px #00ff00, 0 0 12px #00ff00;
+    transform: scale(1.2);
+  }
+}
+
+
 
 
 footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:30px; text-align:center; font-size:14px; border-top:1px solid #444; }
@@ -221,13 +251,7 @@ footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:
   ">MeraStore</span>
 
   <!-- Yonca (içi şəffaf, kontur parıltılı) -->
-  <span style="
-    font-size: 1em;
-    color: transparent; /* içi boş saxlayır */
-    -webkit-text-stroke: 2px #00ff00; /* yaşıl kontur */
-    text-shadow: 0 0 12px #00ff00, 0 0 6px #00ff00; /* yalnız kontur parıltısı */
-    -webkit-text-fill-color: transparent; /* içi parıldamasın */
-  ">☘︎</span>
+  <span class="clover-animated">☘︎</span>
 </h1>
 <h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik)</h2>
 
