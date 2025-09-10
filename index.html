@@ -197,17 +197,12 @@ h2 {
   margin-top: 5px; /* üst boşluğu azaldır */
 }
 
-/* Başlıq ümumi stil */
-.logo {
-  font-family: 'Poppins', sans-serif;
-  font-size: 42px;
-  font-weight: 800;
-  text-align: center;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  letter-spacing: 1px;
-  margin: 20px 0;
+.logo-text {
+  background: linear-gradient(90deg, #ffffff, #f5f5f5); /* çox incə ağ gradient */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1px rgba(255,255,255,0.15); /* əsas minimal parıltı */
+  animation: gentle-breathe 4s ease-in-out infinite;
 }
 
 .logo-text {
@@ -242,6 +237,21 @@ h2 {
   50% {
     text-shadow: 0 0 25px #00ff00, 0 0 12px #00ff00;
     transform: scale(1.2);
+  }
+}
+
+@keyframes gentle-breathe {
+  0%, 100% {
+    text-shadow: 0 0 1px rgba(255,255,255,0.15);
+  }
+  25% {
+    text-shadow: 0 0 2px rgba(255,255,255,0.2);
+  }
+  50% {
+    text-shadow: 0 0 3px rgba(255,255,255,0.25);
+  }
+  75% {
+    text-shadow: 0 0 2px rgba(255,255,255,0.2);
   }
 }
  
