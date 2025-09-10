@@ -21,45 +21,213 @@ h1, h2 { color:#fff; text-align:center; }
 .charm-wrapper { display: flex; flex-direction: column; align-items: center; width: 60px; background: #4a4a4a; padding: 8px; border-radius: 10px; position: relative; }
 .charm { width: 50px; height: 50px; cursor: pointer; border: 2px solid transparent; object-fit: contain; border-radius: 8px; background: #fff; padding: 5px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; -webkit-user-drag:none; user-drag:none; -webkit-touch-callout:none; }
 .charm:hover { transform: scale(1.1); }
-.charm.selected { border: 3px solid #f39c12; box-shadow: 0 0 15px #f39c12; transform: scale(1.15); transition: transform 0.2s, box-shadow 0.2s, border 0.2s; }
-.placed-charm { position: absolute; top: 50%; left: 50%; width: 90%; height: 90%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: auto; animation: fadeIn 0.4s ease; -webkit-user-drag: none; user-drag: none; transition: transform 0.2s, box-shadow 0.2s; }
-.placed-charm:hover { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 12px #f39c12; }
-.placed-charm.fade-out { animation: fadeOut 0.3s forwards; }
+.charm.selected {
+  border: 3px solid #f39c12;     /* Border qalınlığını artır */
+  box-shadow: 0 0 15px #f39c12;  /* Daha böyük parıltı */
+  transform: scale(1.15);        /* Seçilən charm bir az böyüsün */
+  transition: transform 0.2s, box-shadow 0.2s, border 0.2s;
+}
+.placed-charm {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: 90%;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  pointer-events: auto;
+  animation: fadeIn 0.4s ease;
+  -webkit-user-drag: none;
+  user-drag: none;
+  transition: transform 0.2s, box-shadow 0.2s; /* hover animasiyası üçün */
+}
+
+.header {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center; /* MeraStore mərkəzdə */
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.header-icons {
+  position: absolute;
+  left: 10px; /* sol tərəfdə logolar */
+  display: flex;
+  gap: 12px; /* logolar arası məsafə */
+  align-items: center;
+}
+
+.clover {
+  color:#006400;
+  background-color:#00FF00;
+  padding:0 4px;
+  border-radius:4px;
+  box-shadow:0 0 8px #00FF00;
+}
+
+
+.header-icons img {
+  width: 30px; /* ikon ölçüsü */
+  height: 30px;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.header h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); /* tam mərkəz */
+  text-align: center;
+  color: #fff;
+}
+
+
+@media(max-width:480px){
+  .header {
+    gap: 8px;
+  }
+  .header-icons a img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.placed-charm:hover {
+  transform: translate(-50%, -50%) scale(1.1); /* hover zamanı böyümə */
+  box-shadow: 0 0 12px #f39c12;               /* parıltı */
+}
+
+.placed-charm.fade-out {
+  animation: fadeOut 0.3s forwards;
+}
 .favorite-btn { position:absolute; bottom:2px; right:2px; font-size:12px; border:none; border-radius:50%; background:#f39c12; color:#fff; cursor:pointer; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
 @keyframes fadeIn { from { opacity:0; transform:translate(-50%,-50%) scale(0.8); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
 @keyframes fadeOut { from { opacity:1; transform:translate(-50%,-50%) scale(1); } to { opacity:0; transform:translate(-50%,-50%) scale(0.5); } }
-.filter-buttons { margin: 10px 0; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-.filter-buttons button { padding: 8px 14px; border: none; border-radius: 10px; background: linear-gradient(145deg, #f39c12, #d35400); color: #fff; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.5); transform: scale(1); }
-.filter-buttons button:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.5); background: linear-gradient(145deg, #e67e22, #d35400); }
-.filter-buttons button.selected { background: linear-gradient(145deg, #e67e22, #f39c12); box-shadow: 0 0 15px rgba(243,156,18,0.9); padding: 10px 16px; color: #fff; }
-.action-buttons { display: flex; flex-direction: row; gap: 15px; justify-content: center; margin: 20px 0; }
-.action-buttons button { flex: 0 0 auto; padding: 12px 25px; font-size: 15px; font-weight: 600; border-radius: 12px; color: #fff; box-shadow: 0 6px 12px rgba(0,0,0,0.4); background-size: 200% 100%; transition: all 0.3s ease, transform 0.2s, box-shadow 0.2s; border: none; }
-#clearAll { background-image: linear-gradient(135deg, #9b1e1e, #6d1313); }
-#clearAll:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 18px rgba(0,0,0,0.6); }
-#shareBtn { background-image: linear-gradient(135deg, #1f5278, #10335c); }
-#shareBtn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 8px 18px rgba(0,0,0,0.6); }
-footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:30px; text-align:center; font-size:14px; border-top:1px solid #444; }
+.filter-buttons { 
+  margin: 10px 0; 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 8px; 
+  justify-content: center; 
+}
 
-/* Mənim Dizaynlarım */
-#myDesigns { width:100%; max-width:520px; margin-top:18px; }
-#myDesigns h3 { color:#f39c12; margin-bottom:10px; text-align:center; }
-.design-card { background:#3a3a3a; border-radius:12px; padding:10px; margin-bottom:12px; display:flex; flex-direction:column; align-items:center; gap:8px; }
-.design-preview { display:flex; gap:2px; transform:scale(0.75); transform-origin:top center; }
-.design-slot { width:40px; height:40px; background:url('https://i.ibb.co/Kc96Wj87/qolbaq.png') no-repeat center/contain; position:relative; }
-.design-slot img { position:absolute; top:50%; left:50%; width:75%; height:75%; transform:translate(-50%,-50%); object-fit:contain; }
-.design-actions { display:flex; gap:10px; }
-.design-actions button { padding:6px 12px; font-size:12px; border:none; border-radius:8px; cursor:pointer; color:#fff; }
-.load-btn { background:#27ae60; }
-.share-btn { background:#2980b9; }
-.delete-btn { background:#c0392b; }
-.small { font-size:12px; color:#ccc; }
+.filter-buttons button { 
+  padding: 8px 14px; 
+  border: none; 
+  border-radius: 10px; 
+  background: linear-gradient(145deg, #f39c12, #d35400); /* default gradient */
+  color: #fff; 
+  cursor: pointer; 
+  font-size: 13px; 
+  font-weight: 500; 
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5); /* default kölgə */
+  transform: scale(1); /* default ölçü */
+}
+
+
+.filter-buttons button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  background: linear-gradient(145deg, #e67e22, #d35400);
+}
+
+.filter-buttons button.selected {
+  background: linear-gradient(145deg, #e67e22, #f39c12);
+  box-shadow: 0 0 15px rgba(243,156,18,0.9);
+  padding: 10px 16px; /* seçilmiş düymə bir az daha geniş olsun */
+  color: #fff;
+}
+
+.action-buttons button {
+  flex: 0 0 auto;
+  padding: 12px 25px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px;
+  color: #fff;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+  background-size: 200% 100%;
+  transition: all 0.3s ease, transform 0.2s, box-shadow 0.2s;
+  border: none;
+}
+
+/* Bütün charmları sil */
+#clearAll {
+  background-image: linear-gradient(135deg, #9b1e1e, #6d1313);
+}
+#clearAll:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.6);
+}
+
+/* Dizaynı paylaş */
+#shareBtn {
+  background-image: linear-gradient(135deg, #1f5278, #10335c);
+}
+#shareBtn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.6);
+}
+
+/* Düymələr yan-yana qalır */
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: center;
+  margin: 20px 0;
+}
+  
+h1 {
+  margin-bottom: 5px; /* MeraStore altındakı boşluğu azaldır */
+}
+
+h2 {
+  margin-top: 5px;
+  margin-bottom: 8px; /* Charm seçmə bölməsi ilə aradakı boşluğu azaldır */
+}
+
+.filter-buttons {
+  margin-top: 5px; /* üst boşluğu azaldır */
+}
+
+
+
+footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:30px; text-align:center; font-size:14px; border-top:1px solid #444; }
 </style>
 </head>
 <body>
 <!-- HEADER -->
-<h1 style="font-family: 'Poppins', sans-serif; font-size: 48px; font-weight: 800; text-align: center; display: inline-flex; align-items: center; gap: 12px; letter-spacing: 1px;"> 
-  <span style="background: linear-gradient(90deg, #ffffff, #e6e6e6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 8px rgba(255,255,255,0.6), 0 0 4px rgba(255,255,255,0.4); transition: all 0.3s ease;">MeraStore</span>
-  <span style="font-size: 1em; color: transparent; -webkit-text-stroke: 2px #00ff00; text-shadow: 0 0 12px #00ff00, 0 0 6px #00ff00; -webkit-text-fill-color: transparent;">☘︎</span>
+<h1 style="
+  font-family: 'Poppins', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: 1px;
+">
+  <!-- MeraStore -->
+  <span style="
+    background: linear-gradient(90deg, #ffffff, #e6e6e6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 8px rgba(255,255,255,0.6), 0 0 4px rgba(255,255,255,0.4);
+    transition: all 0.3s ease;
+  ">MeraStore</span>
+
+  <!-- Yonca (içi şəffaf, kontur parıltılı) -->
+  <span style="
+    font-size: 1em;
+    color: transparent; /* içi boş saxlayır */
+    -webkit-text-stroke: 2px #00ff00; /* yaşıl kontur */
+    text-shadow: 0 0 12px #00ff00, 0 0 6px #00ff00; /* yalnız kontur parıltısı */
+    -webkit-text-fill-color: transparent; /* içi parıldamasın */
+  ">☘︎</span>
 </h1>
 <h2>Charm seç və qolbaqda yerləşdir (sil → 2 klik)</h2>
 
@@ -80,15 +248,9 @@ footer { width:100%; background:#1f1f1f; color:#fff; padding:20px 0; margin-top:
   <button id="shareBtn">Dizaynı paylaş</button>
 </div>
 
+
 <div class="wristband-wrapper" id="wristbandWrapper">
   <div class="wristband-row" id="wristbandRow"></div>
-</div>
-
-<!-- Mənim Dizaynlarım (qolbaqdan dərhal sonra görünür) -->
-<div id="myDesigns">
-  <h3>⭐ Mənim Saxladığım Dizaynlar</h3>
-  <div id="designList"></div>
-  <div class="small" style="text-align:center; margin-top:6px;">Dizayn paylaşdıqda burada avtomatik saxlanacaq. Başqalarına link göndərsən onlar da eyni dizaynı görəcək.</div>
 </div>
 
 <div class="search-box">
@@ -319,7 +481,6 @@ document.getElementById('clearAll').addEventListener('click', ()=>{
   }
 });
 
-// keep filter button selection behavior
 document.querySelectorAll('.filter-buttons button').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-buttons button').forEach(b => b.classList.remove('selected'));
@@ -328,103 +489,21 @@ document.querySelectorAll('.filter-buttons button').forEach(btn => {
   });
 });
 
-// ------------------------
-// Save/share designs (long link) + "Mənim Dizaynlarım" preview
-// ------------------------
-function generateId(){ return (Date.now().toString(36) + Math.random().toString(36).slice(2,7)); }
-
-function getCurrentWristbandCharms(){
-  return [...document.querySelectorAll('.wristband-slot')].map((s,i)=>{
-    const img = s.querySelector('.placed-charm');
-    return img? { slot:i, src: img.src } : null;
-  }).filter(Boolean);
-}
-
-function saveDesignLocal(code, charms){
-  let designs = JSON.parse(localStorage.getItem('myDesigns') || '[]');
-  // avoid duplicates by code
-  if(!designs.find(d=>d.code===code)){
-    designs.push({ id: generateId(), code, charms, created: Date.now() });
-    localStorage.setItem('myDesigns', JSON.stringify(designs));
-  }
-  renderDesigns();
-}
-
-function renderDesigns(){
-  const list = document.getElementById('designList');
-  list.innerHTML = '';
-  let designs = JSON.parse(localStorage.getItem('myDesigns') || '[]');
-  if(designs.length===0){ list.innerHTML = '<div class="small">Heç bir saxlanmış dizayn yoxdur</div>'; return; }
-  designs.forEach((d, idx) => {
-    const card = document.createElement('div'); card.className='design-card';
-    const preview = document.createElement('div'); preview.className='design-preview';
-    for(let i=0;i<14;i++){
-      const slot = document.createElement('div'); slot.className='design-slot';
-      const ch = d.charms.find(c=>c.slot===i);
-      if(ch){ const img=document.createElement('img'); img.src=ch.src; slot.appendChild(img); }
-      preview.appendChild(slot);
-    }
-    card.appendChild(preview);
-
-    const actions = document.createElement('div'); actions.className='design-actions';
-    const load = document.createElement('button'); load.textContent='Yüklə'; load.className='load-btn';
-    load.addEventListener('click', ()=>{
-      localStorage.setItem('wristbandCharms', JSON.stringify(d.charms));
-      // populate slots
-      document.querySelectorAll('.wristband-slot').forEach((slot, i)=>{ slot.querySelectorAll('.placed-charm').forEach(pc=> pc.remove()); });
-      d.charms.forEach(item=>{
-        const slotEl = wristbandRow.children[item.slot];
-        if(slotEl){ const placed=document.createElement('img'); placed.src=item.src; placed.className='placed-charm'; addRemoveEvent(placed, item.slot); slotEl.appendChild(placed); }
-      });
-    });
-
-    const share = document.createElement('button'); share.textContent='Paylaş'; share.className='share-btn';
-    share.addEventListener('click', ()=>{
-      const url = `${location.origin}${location.pathname}?design=${encodeURIComponent(d.code)}`;
-      navigator.clipboard.writeText(url).then(()=> alert('Link kopyalandı!'));
-    });
-
-    const del = document.createElement('button'); del.textContent='Sil'; del.className='delete-btn';
-    del.addEventListener('click', ()=>{
-      if(confirm('Silmək istədiyinizə əminsiniz?')){
-        designs.splice(idx,1); localStorage.setItem('myDesigns', JSON.stringify(designs)); renderDesigns();
-      }
-    });
-
-    actions.appendChild(load); actions.appendChild(share); actions.appendChild(del);
-    card.appendChild(actions);
-    list.appendChild(card);
-  });
-}
-
-// share button
 document.getElementById('shareBtn').addEventListener('click', ()=>{
-  const charms = getCurrentWristbandCharms();
+  const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
   const encoded = btoa(JSON.stringify(charms));
-  const url = `${location.origin}${location.pathname}?design=${encodeURIComponent(encoded)}`;
-  navigator.clipboard.writeText(url).then(()=> alert('Dizayn linki kopyalandı!'));
-  saveDesignLocal(encoded, charms);
+  const url = `${location.origin}${location.pathname}?design=${encoded}`;
+  navigator.clipboard.writeText(url).then(()=> alert("Dizayn linki kopyalandı!"));
 });
 
-// load from URL (design param) without reloading
 const params = new URLSearchParams(location.search);
 if(params.has('design')){
   try{
-    const raw = decodeURIComponent(params.get('design'));
-    const charms = JSON.parse(atob(raw));
-    // populate slots
-    document.querySelectorAll('.wristband-slot').forEach(s=> s.querySelectorAll('.placed-charm').forEach(pc=> pc.remove()));
-    charms.forEach(item=>{
-      const slotEl = wristbandRow.children[item.slot];
-      if(slotEl){ const placed = document.createElement('img'); placed.src=item.src; placed.className='placed-charm'; addRemoveEvent(placed, item.slot); slotEl.appendChild(placed); }
-    });
-    // save to myDesigns
-    saveDesignLocal(raw, charms);
-  }catch(e){ console.error('Design param oxunmadı', e); }
+    const charms = JSON.parse(atob(params.get('design')));
+    localStorage.setItem('wristbandCharms', JSON.stringify(charms));
+    location.href = location.origin + location.pathname;
+  }catch(e){ console.error("Link oxunmadı:", e); }
 }
-
-// initial render
-renderDesigns();
 </script>
 </body>
 </html>
