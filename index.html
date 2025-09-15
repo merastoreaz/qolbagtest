@@ -21,6 +21,12 @@ h1, h2 { color:#fff; text-align:center; }
 .wristband-slot { flex: 0 0 auto; width: 60px; height: 60px; background: url('https://i.ibb.co/Kc96Wj87/qolbaq.png') no-repeat center/contain; cursor: pointer; position: relative; transition: transform 0.2s, box-shadow 0.2s; scroll-snap-align: start; }
 .wristband-slot:hover { transform: scale(1.05); }
 @media(max-width:480px){ .wristband-wrapper{ max-width:95%; } .wristband-row{ transform: scale(0.75); } .wristband-slot{ width:40px;height:40px; } }
+
+@media(max-width: 320px){
+  .clover-animated {
+    transform: scale(0.8);
+  }
+}
 .charm-section{ width:100%; max-width:450px; margin-top:20px; }
 .charm-group-title{ margin:10px 0 5px; font-size:16px; color:#f39c12; }
 .charm-container { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -257,6 +263,14 @@ h2 {
 
 .filter-buttons {
   margin-top: 5px; /* üst boşluğu azaldır */
+}
+
+.logo {
+  display: flex;
+  align-items: center;    /* yuxarı-aşağı mərkəzləşdir */
+  justify-content: center; /* ekranın mərkəzində */
+  gap: 5px;                /* logo və yonca arası məsafə */
+  flex-wrap: nowrap;        /* heç vaxt alt sətirə keçməsin */
 }
 
 .logo-text {
