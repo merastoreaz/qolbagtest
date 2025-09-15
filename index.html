@@ -696,7 +696,7 @@ document.getElementById('buyBtn').addEventListener('click', async () => {
   try {
     const shortUrl = await shortenURL(longUrl);
     const message = encodeURIComponent("Salam, bu dizaynı sifariş etmək istəyirəm: " + shortUrl);
-    window.open(`https://wa.me/994705849113?text=${message}`, "_blank");
+    location.href = `https://wa.me/994705849113?text=${message}`;
   } catch (e) {
     alert("URL qısaldılmadı, xahiş edirik yenidən cəhd edin.");
     console.error(e);
