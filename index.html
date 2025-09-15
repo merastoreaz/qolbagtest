@@ -655,31 +655,25 @@ document.querySelectorAll('.filter-buttons button').forEach(btn => {
   });
 });
 
-document.getElementById('shareBtn').addEventListener('click', async ()=>{
+document.getElementById('shareBtn').addEventListener('click', ()=>{
   const charms = JSON.parse(localStorage.getItem('wristbandCharms')||'[]');
   if(charms.length===0){ alert("Əvvəlcə qolbağa charm əlavə edin!"); return; }
   const encoded = LZString.compressToEncodedURIComponent(JSON.stringify(charms));
-  const longUrl = `${location.origin}${location.pathname}?design=${encoded}`;
-
-  const shortUrl = await shortenWithPHP(longUrl);
-  if(shortUrl){
-      document.getElementById('shareLink').value = shortUrl;
-      document.getElementById('shareModal').style.display='flex';
-  } else alert("Link qısaldılmadı!");
+  const shareUrl = `${location.origin}${location.pathname}?design=${encoded}`;
+  document.getElementById('shareLink').value = shareUrl;
+  document.getElementById('shareModal').style.display='flex';
 });
 
-document.getElementById('buyBtn').addEventListener('click', async ()=>{
+
+document.getElementById('buyBtn').addEventListener('click', ()=>{
   const charms = JSON.parse(localStorage.getItem('wristbandCharms')||'[]');
   if(charms.length===0){ alert("Əvvəlcə qolbağa charm əlavə edin!"); return; }
   const encoded = LZString.compressToEncodedURIComponent(JSON.stringify(charms));
-  const longUrl = `${location.origin}${location.pathname}?design=${encoded}`;
-
-  const shortUrl = await shortenWithPHP(longUrl);
-  if(shortUrl){
-      const message = encodeURIComponent("Salam, bu dizaynı sifariş etmək istəyirəm: "+shortUrl);
-      location.href = `https://wa.me/994705849113?text=${message}`;
-  } else alert("Link qısaldılmadı!");
+  const shareUrl = `${location.origin}${location.pathname}?design=${encoded}`;
+  const message = encodeURIComponent("Salam, bu dizaynı sifariş etmək istəyirəm: "+shareUrl);
+  location.href = `https://wa.me/994705849113?text=${message}`;
 });
+
 
 
 // URL-dən dizayn oxuma (ilk açılışda)
