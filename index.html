@@ -487,6 +487,25 @@ function renderFavorites() {
   favoriteSection.appendChild(favContainer);
 }
 
+function generateShortCode() {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for(let i=0;i<5;i++) code += chars.charAt(Math.floor(Math.random()*chars.length));
+  return code;
+}
+
+async function shortenWithPHP(longUrl){
+  const shortCode = generateShortCode();
+  const res = await fetch('save_short.php', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({code: shortCode, url: longUrl})
+  });
+  const data = await res.json();
+  return data.success ? `${location.origin}/short.php?code=${shortCode}` : null;
+}
+
+
 function closeShareModal() {
   document.getElementById('shareModal').style.display = 'none';
 }
@@ -636,72 +655,32 @@ document.querySelectorAll('.filter-buttons button').forEach(btn => {
   });
 });
 
-const BITLY_TOKEN = "fbcea058f75724d5a35b71769a855c46d0c29043";
-
-async function shortenURL(longUrl) {
-  const response = await fetch("https://api-ssl.bitly.com/v4/shorten", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${BITLY_TOKEN}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ long_url: longUrl })
-  });
-  const data = await response.json();
-  return data.link;
-}
-
-document.getElementById('shareBtn').addEventListener('click', async () => {
-  const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
-  if (charms.length === 0) {
-    alert("Əvvəlcə qolbağa charm əlavə edin!");
-    return;
-  }
+document.getElementById('shareBtn').addEventListener('click', async ()=>{
+  const charms = JSON.parse(localStorage.getItem('wristbandCharms')||'[]');
+  if(charms.length===0){ alert("Əvvəlcə qolbağa charm əlavə edin!"); return; }
   const encoded = LZString.compressToEncodedURIComponent(JSON.stringify(charms));
   const longUrl = `${location.origin}${location.pathname}?design=${encoded}`;
 
-  try {
-    const shortUrl = await shortenURL(longUrl);
-    // Share Modal-da qısaldılmış URL göstər
-    document.getElementById('shareLink').value = shortUrl;
-    document.getElementById('shareModal').style.display = 'flex';
-  } catch (e) {
-    alert("URL qısaldılmadı, xahiş edirik yenidən cəhd edin.");
-    console.error(e);
-  }
+  const shortUrl = await shortenWithPHP(longUrl);
+  if(shortUrl){
+      document.getElementById('shareLink').value = shortUrl;
+      document.getElementById('shareModal').style.display='flex';
+  } else alert("Link qısaldılmadı!");
 });
 
-async function shortenURL(longUrl) {
-  const response = await fetch("https://api-ssl.bitly.com/v4/shorten", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${BITLY_TOKEN}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ long_url: longUrl })
-  });
-  const data = await response.json();
-  return data.link;
-}
-
-document.getElementById('buyBtn').addEventListener('click', async () => {
-  const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
-  if (charms.length === 0) {
-    alert("Əvvəlcə qolbağa charm əlavə edin!");
-    return;
-  }
+document.getElementById('buyBtn').addEventListener('click', async ()=>{
+  const charms = JSON.parse(localStorage.getItem('wristbandCharms')||'[]');
+  if(charms.length===0){ alert("Əvvəlcə qolbağa charm əlavə edin!"); return; }
   const encoded = LZString.compressToEncodedURIComponent(JSON.stringify(charms));
   const longUrl = `${location.origin}${location.pathname}?design=${encoded}`;
 
-  try {
-    const shortUrl = await shortenURL(longUrl);
-    const message = encodeURIComponent("Salam, bu dizaynı sifariş etmək istəyirəm: " + shortUrl);
-    location.href = `https://wa.me/994705849113?text=${message}`;
-  } catch (e) {
-    alert("URL qısaldılmadı, xahiş edirik yenidən cəhd edin.");
-    console.error(e);
-  }
+  const shortUrl = await shortenWithPHP(longUrl);
+  if(shortUrl){
+      const message = encodeURIComponent("Salam, bu dizaynı sifariş etmək istəyirəm: "+shortUrl);
+      location.href = `https://wa.me/994705849113?text=${message}`;
+  } else alert("Link qısaldılmadı!");
 });
+
 
 // URL-dən dizayn oxuma (ilk açılışda)
 const params = new URLSearchParams(location.search);
