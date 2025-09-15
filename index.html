@@ -7,6 +7,8 @@
  
 <!-- Google Fonts əlavə et -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+
   
 <style>
 body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; background: #2b2b2b; font-family: Poppins; padding: 20px; color: #fff; margin: 0; }
@@ -611,20 +613,30 @@ document.querySelectorAll('.filter-buttons button').forEach(btn => {
   });
 });
 
-document.getElementById('shareBtn').addEventListener('click', ()=>{
+document.getElementById('shareBtn').addEventListener('click', () => {
   const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
-  const encoded = btoa(JSON.stringify(charms));
-  const url = `${location.origin}${location.pathname}?design=${encoded}`;
-  navigator.clipboard.writeText(url).then(()=> alert("Dizayn linki kopyalandı!"));
-});
-
-document.getElementById('buyBtn').addEventListener('click', ()=>{
-  const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
-  if(charms.length === 0){
+  if (charms.length === 0) {
     alert("Əvvəlcə qolbağa charm əlavə edin!");
     return;
   }
-  const encoded = btoa(JSON.stringify(charms));
+  // Dizaynı sıxışdır
+  const encoded = LZString.compressToEncodedURIComponent(JSON.stringify(charms));
+  const url = `${location.origin}${location.pathname}?design=${encoded}`;
+  
+  // Share Modal açmaq
+  document.getElementById('shareLink').value = url;
+  document.getElementById('shareModal').style.display = 'flex';
+});
+
+
+document.getElementById('buyBtn').addEventListener('click', () => {
+  const charms = JSON.parse(localStorage.getItem('wristbandCharms') || '[]');
+  if (charms.length === 0) {
+    alert("Əvvəlcə qolbağa charm əlavə edin!");
+    return;
+  }
+  // Dizaynı sıxışdır
+  const encoded = LZString.compressToEncodedURIComponent(JSON.stringify(charms));
   const url = `${location.origin}${location.pathname}?design=${encoded}`;
   
   const message = encodeURIComponent("Salam, bu dizaynı sifariş etmək istəyirəm: " + url);
@@ -632,14 +644,24 @@ document.getElementById('buyBtn').addEventListener('click', ()=>{
 });
 
 
+
+<script>
+// URL-dən dizayn oxuma (ilk açılışda)
 const params = new URLSearchParams(location.search);
-if(params.has('design')){
-  try{
-    const charms = JSON.parse(atob(params.get('design')));
+if (params.has('design')) {
+  try {
+    const decoded = LZString.decompressFromEncodedURIComponent(params.get('design'));
+    const charms = JSON.parse(decoded);
     localStorage.setItem('wristbandCharms', JSON.stringify(charms));
     location.href = location.origin + location.pathname;
-  }catch(e){ console.error("Link oxunmadı:", e); }
+  } catch (e) {
+    console.error("Link oxunmadı:", e);
+  }
 }
+
+// digər kodlar burada qalır: shareBtn, buyBtn və qolbaq funksiyaları
+</script>
+
 </script>
 </body>
 </html>
