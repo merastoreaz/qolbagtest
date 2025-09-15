@@ -368,6 +368,16 @@ h2 {
 <div id="favoriteSection" class="charm-section"></div>
 <div class="charm-section" id="charmSection"></div>
 
+<!-- Share Modal -->
+<div id="shareModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000;">
+  <div style="background:#333; padding:20px; border-radius:12px; max-width:400px; width:90%; text-align:center; color:#fff; position:relative;">
+    <h3>Dizayn linki</h3>
+    <input type="text" id="shareLink" style="width:100%; padding:8px; border-radius:6px; border:none; margin:10px 0;" readonly>
+    <button onclick="copyShareLink()" style="padding:10px 20px; border:none; border-radius:8px; background:#f39c12; color:#fff; cursor:pointer;">Kopyala</button>
+    <button onclick="closeShareModal()" style="padding:10px 20px; border:none; border-radius:8px; background:#e74c3c; color:#fff; cursor:pointer; margin-left:10px;">Bağla</button>
+  </div>
+</div>
+
 <footer>
   <div>MeraStore © 2035</div>
   <div class="social-icons">
@@ -476,6 +486,19 @@ function renderFavorites() {
   });
   favoriteSection.appendChild(favContainer);
 }
+
+function closeShareModal() {
+  document.getElementById('shareModal').style.display = 'none';
+}
+
+function copyShareLink() {
+  const linkInput = document.getElementById('shareLink');
+  linkInput.select();
+  linkInput.setSelectionRange(0, 99999); 
+  navigator.clipboard.writeText(linkInput.value);
+  alert("Link kopyalandı!");
+}
+
 
 function renderCharms(filterText='', groupFilter=''){
   charmSection.innerHTML = '';
