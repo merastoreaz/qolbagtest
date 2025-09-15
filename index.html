@@ -13,8 +13,6 @@
 <style>
 body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; background: #2b2b2b; font-family: Poppins; padding: 20px; color: #fff; margin: 0; }
 h1, h2 { color:#fff; text-align:center; }
-.search-box { margin: 10px 0; width: 100%; max-width: 400px; }
-.search-box input { width: 100%; padding: 8px; border-radius: 8px; border: none; outline: none; font-size: 14px; }
 .wristband-wrapper { width: 100%; max-width: 400px; padding: 10px; background: #3a3a3a; border-radius: 15px; overflow-x: auto; overflow-y: hidden; cursor: grab; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
 .wristband-wrapper:active { cursor: grabbing; }
 .wristband-row { display: flex; gap: 2px; padding: 10px 0; flex-wrap: nowrap; transform: scale(0.85); transform-origin: left center; }
@@ -368,10 +366,6 @@ Spin + pulse anim
   <div class="wristband-row" id="wristbandRow"></div>
 </div>
 
-<div class="search-box">
-  <input type="text" id="searchInput" placeholder="Charm axtar...">
-</div>
-
 <div class="buy-box">
   <button id="buyBtn">Qolbağı satın al</button>
 </div>
@@ -455,7 +449,6 @@ const charmData = [
 const wristbandRow = document.getElementById('wristbandRow');
 const charmSection = document.getElementById('charmSection');
 const favoriteSection = document.getElementById('favoriteSection');
-const searchInput = document.getElementById('searchInput');
 let selectedCharm = null;
 
 let favoriteCharms = JSON.parse(localStorage.getItem('favoriteCharms') || '[]');
@@ -594,10 +587,6 @@ function renderCharms(filterText='', groupFilter=''){
 renderFavorites();
 renderCharms();
 
-searchInput.addEventListener('input', e=> renderCharms(e.target.value));
-document.querySelectorAll('.filter-buttons button').forEach(btn=>{
-  btn.addEventListener('click', ()=> renderCharms('', btn.getAttribute('data-group')));
-});
 
 // Qolbaq slotları
 for(let i=0;i<14;i++){
